@@ -1,0 +1,49 @@
+const incomeSchema = require("../models/income");
+exports.addIncome = async (req, res) => {
+    const { title, amount, date, category, description } = req.body;
+
+    const income = incomeSchema({
+        title,
+        amount,
+        date,
+        category,
+        description
+    })
+
+    try {
+        if(!title || !amount || !date || !category || !description){
+            return res.status(400).json({message: 'All fields are required!'})
+        }
+
+        if(amount <= 0 || !amount === 'number'){
+            return res.status(400).json({message: 'Amount should be a positive number!'})
+        }
+        await income.save();
+        res.status(200).json({message: 'Income added.'})
+
+    } catch (error) {
+        return res.status(500).json({message: 'Server error.'})
+    }
+}
+
+exports.getIncomes = async (req, res) => {
+    try {
+        const incomes = await incomeSchema.find().sort({createdAt: -1});
+        res.status(200).json(incomes)
+
+    } catch (error) {
+        return res.status(500).json({message: 'Server error.'})
+    }
+}
+
+exports.deleteIncome = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+        const income = await incomeSchema.findByIdAndDelete(id);
+        res.status(200).json({message: 'Income Deleted'})
+
+    } catch (error) {
+        return res.status(500).json({message: 'Server error.'})
+    }
+}
