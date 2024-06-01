@@ -22,7 +22,7 @@ function Expense() {
   });
 
   const onAdd = (expenseDetails) => {
-    expenseDetails = { ...expenseDetails, category: expenseDetails.category.code, date: new Date(expenseDetails.date).toLocaleDateString() }
+    expenseDetails = { ...expenseDetails, category: typeof expenseDetails.category === "string" ? expenseDetails.category : expenseDetails.category.code, date: new Date(expenseDetails.date).toLocaleDateString() }
     addExpense(expenseDetails);
     setVisible(false);
   }

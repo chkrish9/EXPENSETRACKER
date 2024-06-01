@@ -89,6 +89,7 @@ export const TransactionForm = ({ visible, onAdd, onCacel, categoryOptions, head
                         value={category}
                         name="category"
                         id="category"
+                        editable
                         onChange={(e) => {
                             setInputState({ ...inputState, category: e.value })
                         }}

@@ -28,13 +28,13 @@ export const GlobalProvider = ({ children }) => {
         console.log(response.data)
     }
 
-    const getTotalByCategories = (transactions) => {
+    const getTotalByCategories = (transactions, category) => {
         if (!transactions || (transactions && transactions.length === 0)) return [];
         return transactions.reduce((totals, transaction) => {
-            if (!totals[transaction.category]) {
-                totals[transaction.category] = transaction.amount;
+            if (!totals[transaction[category]]) {
+                totals[transaction[category]] = transaction.amount;
             } else {
-                totals[transaction.category] = totals[transaction.category] + transaction.amount;
+                totals[transaction[category]] = totals[transaction[category]] + transaction.amount;
             }
             return totals;
         }, {})
@@ -89,6 +89,10 @@ export const GlobalProvider = ({ children }) => {
         return totalIncome() - totalExpenses()
     }
 
+    const totalBalanceInPercentage = () => {
+        return (totalExpenses()/totalIncome()) * 100;
+    }
+
     const transactionHistory = () => {
         const history = [...incomes, ...expenses]
         history.sort((a, b) => {
@@ -135,6 +139,7 @@ export const GlobalProvider = ({ children }) => {
             deleteExpense,
             totalExpenses,
             totalBalance,
+            totalBalanceInPercentage,
             getExpenseCategories,
             transactionHistory,
             getTotalByCategories,

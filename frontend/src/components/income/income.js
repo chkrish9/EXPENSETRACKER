@@ -13,14 +13,14 @@ function Income() {
     if (!items || items.length === 0) return null;
 
     let list = items.map((income) => {
-      return <TransactionBlock transaction={income} deleteTransaction={deleteIncome} key={income._id} type={"income"}/>;
+      return <TransactionBlock transaction={income} deleteTransaction={deleteIncome} key={income._id} type={"income"} />;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;
   });
 
   const onAdd = (incomeDetails) => {
-    incomeDetails = { ...incomeDetails, category: incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString() }
+    incomeDetails = { ...incomeDetails, category: typeof incomeDetails.category === "string" ? incomeDetails.category : incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString() }
     addIncome(incomeDetails);
     setVisible(false);
   }

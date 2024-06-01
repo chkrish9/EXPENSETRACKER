@@ -40,7 +40,11 @@ export const TransactionBlock = ({
             case 'circle':
                 return circle;
             default:
-                return ''
+                if(type==="income"){
+                    return piggy;
+                }else if(type==="expense"){
+                    return circle;
+                }
         }
     }
 
