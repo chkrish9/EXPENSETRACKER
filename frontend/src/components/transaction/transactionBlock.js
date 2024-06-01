@@ -50,18 +50,18 @@ export const TransactionBlock = ({
 
     return (
         <div className="col-6 sm:col-4 lg:col-3 xl:col-2 p-2">
-            <div className="p-4 border-1 surface-border surface-card border-round">
-                <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <div className="p-2 border-1 surface-border surface-card border-round">
+                <div className="flex flex-wrap align-items-center justify-content-center gap-2">
                     <div className="flex align-items-center gap-2">
-                        <span className="">{categories.find(category => category.code === transaction.category)?.name}</span>
+                        <span className="text-2xl font-semibold">{categoryIcon(transaction.category)}</span>
+                        <span className="hidden lg:inline-block xl:inline-block">{categories.find(category => category.code === transaction.category)?.name}</span>
                     </div>
                 </div>
                 <div className="flex flex-column align-items-center gap-3 py-5">
                     <span className='text-5xl'>${transaction.amount}</span>
-                    <div className="text-2xl font-bold">{transaction.title}</div>
+                    <div className="font-bold">{transaction.title}</div>
                 </div>
-                <div className="flex align-items-center justify-content-between">
-                    <span className="text-2xl font-semibold">{categoryIcon(transaction.category)}</span>
+                <div className="flex justify-content-center">
                     <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteTransaction(transaction._id)}></Button>
                 </div>
             </div>

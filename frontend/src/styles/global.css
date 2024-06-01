@@ -26,3 +26,7 @@ body,
     justify-content: space-around;
     width: 100%;
 }
+
+.p-menubar-button{
+    display: none;
+}
