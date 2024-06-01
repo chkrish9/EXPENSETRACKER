@@ -30,26 +30,20 @@ function Income() {
   }
   const itemTemplate = (income, index) => {
     return (
-      <div className="col-12" key={income._id}>
-        <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
-          <div className="w-9 sm:w-16rem xl:w-10rem mx-auto flex justify-content-center">
-            {categoryIcon(income.category)}
+      <div className="col-12 sm:col-4 lg:col-3 xl:col-2 p-2" key={income._id}>
+        <div className="p-4 border-1 surface-border surface-card border-round">
+          <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <div className="flex align-items-center gap-2">
+              {income.category}
+            </div>
           </div>
-          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div className="text-2xl font-bold text-900">{income.title}</div>
-              <div>{income.description}</div>
-              <div className="flex align-items-center gap-3">
-                <span className="flex align-items-center gap-2">
-                  <span className="font-semibold">{income.date}</span>
-                </span>
-
-              </div>
-            </div>
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span className="text-2xl font-semibold">${income.amount}</span>
-              <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteIncome(income._id)}></Button>
-            </div>
+          <div className="flex flex-column align-items-center gap-3 py-5">
+            {categoryIcon(income.category)}
+            <div className="text-2xl font-bold">{income.title}</div>
+          </div>
+          <div className="flex align-items-center justify-content-between">
+            <span className="text-2xl font-semibold">${income.amount}</span>
+            <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteIncome(income._id)}></Button>
           </div>
         </div>
       </div>
@@ -66,7 +60,7 @@ function Income() {
   });
 
   const onAdd = (incomeDetails) => {
-    incomeDetails = {...incomeDetails, category:incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString()}
+    incomeDetails = { ...incomeDetails, category: incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString() }
     addIncome(incomeDetails);
     setVisible(false);
   }
@@ -80,8 +74,8 @@ function Income() {
       <div className="card">
         <DataView value={incomes} listTemplate={listTemplate} />
       </div>
-      <IncomeForm visible={visible} onAdd={onAdd} onCacel={onCacel}/>
-      <Button icon="pi pi-plus" className="fixed add-icon" rounded severity="info" aria-label="Add" onClick={() => setVisible(!visible)}/>
+      <IncomeForm visible={visible} onAdd={onAdd} onCacel={onCacel} />
+      <Button icon="pi pi-plus" className="fixed add-icon" rounded severity="info" aria-label="Add" onClick={() => setVisible(!visible)} />
     </>
   );
 }

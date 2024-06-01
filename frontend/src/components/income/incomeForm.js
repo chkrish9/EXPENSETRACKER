@@ -57,33 +57,36 @@ export const IncomeForm = ({ visible, onAdd, onCacel }) => {
     return (
         <div className="card flex justify-content-center">
             <Dialog header="Add Income" visible={visible} onHide={() => { if (!visible) return; onCacel(false); }} footer={footerContent}>
-                <div>
+                <div className='w-full'>
                     <InputText
                         value={title}
                         name={'title'}
                         placeholder="Income"
+                        className='w-full my-2'
                         onChange={handleInput('title')} />
                 </div>
-                <div>
+                <div className='w-full'>
                     <InputNumber
                         value={amount}
                         type="text"
                         name={'amount'}
                         placeholder={'Amount'}
+                        className='w-full my-2'
                         onValueChange={handleInput('amount')}
                         minFractionDigits={2} />
                 </div>
-                <div>
+                <div className='w-full'>
                     <Calendar
                         placeholder='Date'
                         dateFormat="dd/mm/yy"
+                        className='w-full my-2'
                         onChange={(e) => {
                             setInputState({ ...inputState, date: e.value })
                         }}
                         value={date}
                         showIcon />
                 </div>
-                <div>
+                <div className='w-full'>
                     <Dropdown
                         value={category}
                         name="category"
@@ -94,9 +97,9 @@ export const IncomeForm = ({ visible, onAdd, onCacel }) => {
                         options={getIncomeCategories()}
                         optionLabel="name"
                         placeholder="Select Category"
-                        className="w-full md:w-14rem" />
+                        className="w-full my-2" />
                 </div>
-                <div>
+                <div className='w-full'>
                     <InputTextarea
                         name="description"
                         value={description}
@@ -104,6 +107,7 @@ export const IncomeForm = ({ visible, onAdd, onCacel }) => {
                         id="description"
                         cols="30"
                         rows="4"
+                        className='w-full my-2'
                         onChange={handleInput('description')} />
                 </div>
             </Dialog>
