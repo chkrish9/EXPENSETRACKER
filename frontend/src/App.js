@@ -1,5 +1,3 @@
-import styled from "styled-components";
-import { MainLayout } from "./styles/layout";
 import Navigation from "./components/navigation/navigation";
 import { useState } from "react";
 import Dashboard from "./components/dashboard/dashboard";
@@ -14,39 +12,23 @@ function App() {
       case 1:
         return <Dashboard />;
       case 2:
-        return <Dashboard />;
-      case 3:
         return <Income />;
-      case 4:
+      case 3:
         return <Expense />;
       default:
         return <Dashboard />;
     }
   };
   return (
-    <AppStyled className="App">
-      <MainLayout>
+    <div className="main-app flex flex-column align-items-stretch">
+      <div className="flex-grow-1 flex-shrink-0">
+        <div>{displayData()}</div>
+      </div>
+      <div className="flex-shrink-0">
         <Navigation active={active} setActive={setActive} />
-        <main>{displayData()}</main>
-      </MainLayout>
-    </AppStyled>
+      </div>
+    </div>
   );
 }
-
-const AppStyled = styled.div`
-  height: 100vh;
-  position: relative;
-  main {
-    flex: 1;
-    background: rgba(252, 246, 249, 0.78);
-    border: 3px solid #ffffff;
-    backdrop-filter: blur(4.5px);
-    border-radius: 32px;
-    overflow-x: hidden;
-    &::-webkit-scrollbar {
-      width: 0;
-    }
-  }
-`;
 
 export default App;

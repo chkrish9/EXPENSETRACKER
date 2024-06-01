@@ -86,6 +86,17 @@ export const GlobalProvider = ({children}) => {
         return history.slice(0, 3)
     }
 
+    const getIncomeCategories = () => {
+        return[
+            { name: 'Salary', code: 'salary' },
+            { name: 'Investments', code: 'investments' },
+            { name: 'Stocks', code: 'stocks' },
+            { name: 'Crypto', code: 'crypto' },
+            { name: 'Cash Back', code: 'cashback' },
+            { name: 'Other', code: 'other' }
+        ]; 
+    }
+
 
     return (
         <GlobalContext.Provider value={{
@@ -102,6 +113,7 @@ export const GlobalProvider = ({children}) => {
             totalBalance,
             transactionHistory,
             error,
+            getIncomeCategories,
             setError
         }}>
             {children}
