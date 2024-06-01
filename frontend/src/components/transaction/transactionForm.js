@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useGlobalContext } from '../../context/globalContext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -9,7 +8,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 
-export const IncomeForm = ({ visible, onAdd, onCacel }) => {
+export const TransactionForm = ({ visible, onAdd, onCacel, categoryOptions, header }) => {
     const footerContent = (
         <div>
             <Button
@@ -29,7 +28,6 @@ export const IncomeForm = ({ visible, onAdd, onCacel }) => {
                 }} autoFocus />
         </div>
     );
-    const { getIncomeCategories } = useGlobalContext()
     const [inputState, setInputState] = useState({
         title: '',
         amount: '',
@@ -56,12 +54,12 @@ export const IncomeForm = ({ visible, onAdd, onCacel }) => {
 
     return (
         <div className="card flex justify-content-center">
-            <Dialog header="Add Income" visible={visible} onHide={() => { if (!visible) return; onCacel(false); }} footer={footerContent}>
+            <Dialog header={header} visible={visible} onHide={() => { if (!visible) return; onCacel(false); }} footer={footerContent}>
                 <div className='w-full'>
                     <InputText
                         value={title}
                         name={'title'}
-                        placeholder="Income"
+                        placeholder="Title"
                         className='w-full my-2'
                         onChange={handleInput('title')} />
                 </div>
@@ -94,7 +92,7 @@ export const IncomeForm = ({ visible, onAdd, onCacel }) => {
                         onChange={(e) => {
                             setInputState({ ...inputState, category: e.value })
                         }}
-                        options={getIncomeCategories()}
+                        options={categoryOptions}
                         optionLabel="name"
                         placeholder="Select Category"
                         className="w-full my-2" />

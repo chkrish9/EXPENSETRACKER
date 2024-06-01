@@ -97,6 +97,18 @@ export const GlobalProvider = ({children}) => {
         ]; 
     }
 
+    const getExpenseCategories = () => {
+        return[
+            { name: 'Education', code: 'education' },
+            { name: 'Groceries', code: 'groceries' },
+            { name: 'Health', code: 'health' },
+            { name: 'Subscriptions', code: 'subscriptions' },
+            { name: 'Takeaways', code: 'takeaways' },
+            { name: 'Entertainment', code: 'entertainment' },
+            { name: 'Other', code: 'other' }
+        ]; 
+    }
+
 
     return (
         <GlobalContext.Provider value={{
@@ -111,6 +123,7 @@ export const GlobalProvider = ({children}) => {
             deleteExpense,
             totalExpenses,
             totalBalance,
+            getExpenseCategories,
             transactionHistory,
             error,
             getIncomeCategories,

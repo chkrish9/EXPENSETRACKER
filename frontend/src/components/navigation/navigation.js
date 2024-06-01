@@ -1,11 +1,11 @@
 import { TabMenu } from 'primereact/tabmenu';
-import {dashboard, expenses, transactions, trend} from '../../utils/icons'
+import {dashboard, expenses, trend} from '../../utils/icons'
 
 function Navigation({ active, setActive }) {
     const itemRenderer = (item) => (
-        <a className="p-menuitem-link flex align-items-center gap-2" onClick={() => setActive(item.id)}>
+        <span className="p-menuitem-link flex align-items-center gap-2" onClick={() => setActive(item.id)}>
             <span className="font-bold">{item.icon}</span>
-        </a>
+        </span>
     );
     const menuItems = [
         {
