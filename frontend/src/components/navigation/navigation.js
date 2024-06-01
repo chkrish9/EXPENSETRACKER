@@ -32,7 +32,7 @@ function Navigation({ active, setActive }) {
     ]
     
     return (
-        <div className="flex align-items-center justify-content-center">
+        <div className="flex align-items-center justify-content-center fixed bottom-0 w-full">
             <TabMenu model={menuItems} activeIndex={active - 1 } onTabChange={(e) => setActive(e.id)} />
         </div>
     )
