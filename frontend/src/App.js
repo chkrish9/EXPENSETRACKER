@@ -24,7 +24,7 @@ function App() {
       <div className="flex-grow-1 flex-shrink-0 mb-7">
         <div>{displayData()}</div>
       </div>
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 footer">
         <Navigation active={active} setActive={setActive} />
       </div>
     </div>

@@ -13,5 +13,16 @@ body,
 
 .add-icon {
     right: 5%;
-    bottom: 5%;
+    bottom: 10%;
+}
+
+.footer .p-tabmenu{
+    width: 100%;
+}
+
+.footer .p-tabmenu .p-tabmenu-nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
 }
