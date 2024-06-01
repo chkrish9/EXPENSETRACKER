@@ -21,7 +21,7 @@ function App() {
   };
   return (
     <div className="main-app flex flex-column align-items-stretch">
-      <div className="flex-grow-1 flex-shrink-0">
+      <div className="flex-grow-1 flex-shrink-0 mb-5">
         <div>{displayData()}</div>
       </div>
       <div className="flex-shrink-0">

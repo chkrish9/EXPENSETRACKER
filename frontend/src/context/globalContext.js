@@ -7,7 +7,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const GlobalContext = React.createContext()
 
-export const GlobalProvider = ({children}) => {
+export const GlobalProvider = ({ children }) => {
 
     const [incomes, setIncomes] = useState([])
     const [expenses, setExpenses] = useState([])
@@ -16,7 +16,7 @@ export const GlobalProvider = ({children}) => {
     //calculate incomes
     const addIncome = async (income) => {
         await axios.post(`${BASE_URL}add-income`, income)
-            .catch((err) =>{
+            .catch((err) => {
                 setError(err.response.data.message)
             })
         getIncomes()
@@ -28,6 +28,18 @@ export const GlobalProvider = ({children}) => {
         console.log(response.data)
     }
 
+    const getTotalByCategories = (transactions) => {
+        if (!transactions || (transactions && transactions.length === 0)) return [];
+        return transactions.reduce((totals, transaction) => {
+            if (!totals[transaction.category]) {
+                totals[transaction.category] = transaction.amount;
+            } else {
+                totals[transaction.category] = totals[transaction.category] + transaction.amount;
+            }
+            return totals;
+        }, {})
+    }
+
     const deleteIncome = async (id) => {
         await axios.delete(`${BASE_URL}delete-income/${id}`)
         getIncomes()
@@ -35,7 +47,7 @@ export const GlobalProvider = ({children}) => {
 
     const totalIncome = () => {
         let totalIncome = 0;
-        incomes.forEach((income) =>{
+        incomes.forEach((income) => {
             totalIncome = totalIncome + income.amount
         })
 
@@ -46,7 +58,7 @@ export const GlobalProvider = ({children}) => {
     //calculate expenses
     const addExpense = async (income) => {
         await axios.post(`${BASE_URL}add-expense`, income)
-            .catch((err) =>{
+            .catch((err) => {
                 setError(err.response.data.message)
             })
         getExpenses()
@@ -65,7 +77,7 @@ export const GlobalProvider = ({children}) => {
 
     const totalExpenses = () => {
         let totalIncome = 0;
-        expenses.forEach((income) =>{
+        expenses.forEach((income) => {
             totalIncome = totalIncome + income.amount
         })
 
@@ -87,18 +99,18 @@ export const GlobalProvider = ({children}) => {
     }
 
     const getIncomeCategories = () => {
-        return[
+        return [
             { name: 'Salary', code: 'salary' },
             { name: 'Investments', code: 'investments' },
             { name: 'Stocks', code: 'stocks' },
             { name: 'Crypto', code: 'crypto' },
             { name: 'Cash Back', code: 'cashback' },
             { name: 'Other', code: 'other' }
-        ]; 
+        ];
     }
 
     const getExpenseCategories = () => {
-        return[
+        return [
             { name: 'Education', code: 'education' },
             { name: 'Groceries', code: 'groceries' },
             { name: 'Health', code: 'health' },
@@ -106,7 +118,7 @@ export const GlobalProvider = ({children}) => {
             { name: 'Takeaways', code: 'takeaways' },
             { name: 'Entertainment', code: 'entertainment' },
             { name: 'Other', code: 'other' }
-        ]; 
+        ];
     }
 
 
@@ -125,6 +137,7 @@ export const GlobalProvider = ({children}) => {
             totalBalance,
             getExpenseCategories,
             transactionHistory,
+            getTotalByCategories,
             error,
             getIncomeCategories,
             setError
@@ -134,6 +147,6 @@ export const GlobalProvider = ({children}) => {
     )
 }
 
-export const useGlobalContext = () =>{
+export const useGlobalContext = () => {
     return useContext(GlobalContext)
 }
