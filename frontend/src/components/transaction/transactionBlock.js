@@ -3,13 +3,13 @@ import { bitcoin, book, card, circle, clothing, food, medical, money, piggy, sto
 import { Button } from 'primereact/button';
 
 export const TransactionBlock = ({
-    transaction, deleteTransaction, type
+    transaction, deleteTransaction, type, categories
 }) => {
 
     const categoryIcon = (category) => {
-        if(category === "other" && type==="income"){
+        if (category === "other" && type === "income") {
             category = "piggy";
-        }else if(category === "other" && type==="expense"){
+        } else if (category === "other" && type === "expense") {
             category = "circle"
         }
         switch (category) {
@@ -40,9 +40,9 @@ export const TransactionBlock = ({
             case 'circle':
                 return circle;
             default:
-                if(type==="income"){
+                if (type === "income") {
                     return piggy;
-                }else if(type==="expense"){
+                } else if (type === "expense") {
                     return circle;
                 }
         }
@@ -53,15 +53,15 @@ export const TransactionBlock = ({
             <div className="p-4 border-1 surface-border surface-card border-round">
                 <div className="flex flex-wrap align-items-center justify-content-between gap-2">
                     <div className="flex align-items-center gap-2">
-                        {transaction.category}
+                        <span className="">{categories.find(category => category.code === transaction.category)?.name}</span>
                     </div>
                 </div>
                 <div className="flex flex-column align-items-center gap-3 py-5">
-                    {categoryIcon(transaction.category)}
+                    <span className='text-5xl'>${transaction.amount}</span>
                     <div className="text-2xl font-bold">{transaction.title}</div>
                 </div>
                 <div className="flex align-items-center justify-content-between">
-                    <span className="text-2xl font-semibold">${transaction.amount}</span>
+                    <span className="text-2xl font-semibold">{categoryIcon(transaction.category)}</span>
                     <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteTransaction(transaction._id)}></Button>
                 </div>
             </div>

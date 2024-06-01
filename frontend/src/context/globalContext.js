@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react"
 import axios from 'axios'
+import { getName, getCode } from '../utils/utilites';
 
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -90,7 +91,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const totalBalanceInPercentage = () => {
-        return (totalExpenses()/totalIncome()) * 100;
+        return (totalExpenses() / totalIncome()) * 100;
     }
 
     const transactionHistory = () => {
@@ -102,27 +103,16 @@ export const GlobalProvider = ({ children }) => {
         return history.slice(0, 3)
     }
 
-    const getIncomeCategories = () => {
-        return [
-            { name: 'Salary', code: 'salary' },
-            { name: 'Investments', code: 'investments' },
-            { name: 'Stocks', code: 'stocks' },
-            { name: 'Crypto', code: 'crypto' },
-            { name: 'Cash Back', code: 'cashback' },
-            { name: 'Other', code: 'other' }
-        ];
-    }
-
-    const getExpenseCategories = () => {
-        return [
-            { name: 'Education', code: 'education' },
-            { name: 'Groceries', code: 'groceries' },
-            { name: 'Health', code: 'health' },
-            { name: 'Subscriptions', code: 'subscriptions' },
-            { name: 'Takeaways', code: 'takeaways' },
-            { name: 'Entertainment', code: 'entertainment' },
-            { name: 'Other', code: 'other' }
-        ];
+    const getTransactionsCategories = (transactions) => {
+        return transactions.reduce((categories, transaction) => {
+            if (!categories.find(category => category.code === transaction.category)) {
+                categories.push({
+                    name: getName(transaction.category),
+                    code: getCode(transaction.category)
+                })
+            }
+            return categories;
+        }, [])
     }
 
 
@@ -140,11 +130,10 @@ export const GlobalProvider = ({ children }) => {
             totalExpenses,
             totalBalance,
             totalBalanceInPercentage,
-            getExpenseCategories,
             transactionHistory,
             getTotalByCategories,
             error,
-            getIncomeCategories,
+            getTransactionsCategories,
             setError
         }}>
             {children}
