@@ -17,7 +17,7 @@ export const GlobalProvider = ({ children }) => {
     const [error, setError] = useState(null)
     const [allIncomes, setAllIncomes] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [dashboardDate, setDashboardDate] = useState(new Date());
 
     useEffect(()=>{
@@ -159,7 +159,7 @@ export const GlobalProvider = ({ children }) => {
         return history.slice(0, 3)
     }
 
-    const getTransactionsCategories = (type) => {
+    const getTransactionsCategories = (type, field) => {
         let transactions = [];
         if (type === "incomes") {
             transactions = allIncomes
@@ -167,10 +167,10 @@ export const GlobalProvider = ({ children }) => {
             transactions = allExpenses
         }
         return transactions.reduce((categories, transaction) => {
-            if (!categories.find(category => category.code === transaction.category)) {
+            if (!categories.find(category => category.code === transaction[field])) {
                 categories.push({
-                    name: getName(transaction.category),
-                    code: getCode(transaction.category)
+                    name: getName(transaction[field]),
+                    code: getCode(transaction[field])
                 })
             }
             return categories;

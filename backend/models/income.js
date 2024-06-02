@@ -27,6 +27,11 @@ const incomeSchema = new mongoose.Schema(
       require: true,
       trim: true,
     },
+    subCategory: {
+      type: String,
+      require: true,
+      trim: true,
+    },
     description: {
       type: String,
       trim: true,

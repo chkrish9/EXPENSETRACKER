@@ -8,21 +8,31 @@ import { getCode } from '../../utils/utilites';
 
 function Expense() {
   const { expenses, addExpense, getTransactionsCategories, deleteExpense, totalExpenses } = useGlobalContext();
-  
+
   const [visible, setVisible] = useState(false);
 
   const listTemplate = ((items) => {
     if (!items || items.length === 0) return null;
 
     let list = items.map((expense) => {
-      return <TransactionBlock transaction={expense} deleteTransaction={deleteExpense} key={expense._id} type={"expense"} categories={getTransactionsCategories('expenses')}/>;
+      return <TransactionBlock
+        transaction={expense}
+        deleteTransaction={deleteExpense}
+        key={expense._id}
+        type={"expense"}
+        categories={getTransactionsCategories('expenses', 'category')} />;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;
   });
 
   const onAdd = (expenseDetails) => {
-    expenseDetails = { ...expenseDetails, category: typeof expenseDetails.category === "string" ? getCode(expenseDetails.category) : expenseDetails.category.code, date: new Date(expenseDetails.date).toLocaleDateString() }
+    expenseDetails = {
+      ...expenseDetails,
+      category: typeof expenseDetails.category === "string" ?
+        getCode(expenseDetails.category) :
+        expenseDetails.category.code, date: new Date(expenseDetails.date).toLocaleDateString()
+    }
     addExpense(expenseDetails);
     setVisible(false);
   }
@@ -37,8 +47,22 @@ function Expense() {
       <div className="card">
         <DataView value={expenses} listTemplate={listTemplate} />
       </div>
-      <TransactionForm header={"Add Expense"} visible={visible} onAdd={onAdd} onCacel={onCacel} categoryOptions={getTransactionsCategories('expenses')} />
-      <Button icon="pi pi-plus" className="fixed add-icon" rounded severity="info" aria-label="Add" onClick={() => setVisible(!visible)} />
+      <TransactionForm
+        header={"Add Expense"}
+        visible={visible}
+        onAdd={onAdd}
+        onCacel={onCacel}
+        categoryOptions={getTransactionsCategories('expenses', 'category')}
+        subCategoryOptions={getTransactionsCategories('expenses', 'subCategory')}
+        paidByOptions={getTransactionsCategories('expenses', 'paidBy')}
+        type={"expenses"} />
+      <Button
+        icon="pi pi-plus"
+        className="fixed add-icon"
+        rounded
+        severity="info"
+        aria-label="Add"
+        onClick={() => setVisible(!visible)} />
     </>
   );
 }

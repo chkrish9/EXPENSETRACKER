@@ -14,14 +14,24 @@ function Income() {
     if (!items || items.length === 0) return null;
 
     let list = items.map((income) => {
-      return <TransactionBlock transaction={income} deleteTransaction={deleteIncome} key={income._id} type={"income"} categories={getTransactionsCategories('incomes')}/>;
+      return <TransactionBlock
+        transaction={income}
+        deleteTransaction={deleteIncome}
+        key={income._id}
+        type={"income"}
+        categories={getTransactionsCategories('incomes', 'category')} />;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;
   });
 
   const onAdd = (incomeDetails) => {
-    incomeDetails = { ...incomeDetails, category: typeof incomeDetails.category === "string" ? getCode(incomeDetails.category) : incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString() }
+    incomeDetails = {
+      ...incomeDetails,
+      category: typeof incomeDetails.category === "string" ?
+        getCode(incomeDetails.category) :
+        incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString()
+    }
     addIncome(incomeDetails);
     setVisible(false);
   }
@@ -35,8 +45,21 @@ function Income() {
       <div className="card">
         <DataView value={incomes} listTemplate={listTemplate} />
       </div>
-      <TransactionForm header={"Add Income"} visible={visible} onAdd={onAdd} onCacel={onCacel} categoryOptions={getTransactionsCategories('incomes')} />
-      <Button icon="pi pi-plus" className="fixed add-icon" rounded severity="info" aria-label="Add" onClick={() => setVisible(!visible)} />
+      <TransactionForm
+        header={"Add Income"}
+        visible={visible}
+        onAdd={onAdd}
+        onCacel={onCacel}
+        categoryOptions={getTransactionsCategories('incomes', 'category')}
+        subCategoryOptions={getTransactionsCategories('incomes', 'subCategory')}
+        type={"incomes"} />
+      <Button
+        icon="pi pi-plus"
+        className="fixed add-icon"
+        rounded
+        severity="info"
+        aria-label="Add"
+        onClick={() => setVisible(!visible)} />
     </>
   );
 }

@@ -8,7 +8,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 
-export const TransactionForm = ({ visible, onAdd, onCacel, categoryOptions, header }) => {
+export const TransactionForm = (
+    { visible, onAdd, onCacel, categoryOptions, subCategoryOptions, paidByOptions, header, type }) => {
     const footerContent = (
         <div>
             <Button
@@ -33,10 +34,12 @@ export const TransactionForm = ({ visible, onAdd, onCacel, categoryOptions, head
         amount: '',
         date: '',
         category: '',
+        subCategory: '',
+        paidBy: '',
         description: '',
     })
 
-    const { title, amount, date, category, description } = inputState;
+    const { title, amount, date, category, description, subCategory, paidBy } = inputState;
 
     const handleInput = name => e => {
         setInputState({ ...inputState, [name]: e.target.value })
@@ -48,6 +51,8 @@ export const TransactionForm = ({ visible, onAdd, onCacel, categoryOptions, head
             amount: '',
             date: '',
             category: '',
+            subCategory: '',
+            paidBy: '',
             description: '',
         })
     }
@@ -95,9 +100,39 @@ export const TransactionForm = ({ visible, onAdd, onCacel, categoryOptions, head
                         }}
                         options={categoryOptions}
                         optionLabel="name"
-                        placeholder="Select Category"
+                        placeholder="Category"
                         className="w-full my-2" />
                 </div>
+                <div className='w-full'>
+                    <Dropdown
+                        value={subCategory}
+                        name="subCategory"
+                        id="subCategory"
+                        editable
+                        onChange={(e) => {
+                            setInputState({ ...inputState, subCategory: e.value })
+                        }}
+                        options={subCategoryOptions}
+                        optionLabel="name"
+                        placeholder="Sub Category"
+                        className="w-full my-2" />
+                </div>
+                {
+                    type === "expenses" && <div className='w-full'>
+                        <Dropdown
+                            value={paidBy}
+                            name="paidBy"
+                            id="paidBy"
+                            editable
+                            onChange={(e) => {
+                                setInputState({ ...inputState, paidBy: e.value })
+                            }}
+                            options={paidByOptions}
+                            optionLabel="name"
+                            placeholder="Paid By"
+                            className="w-full my-2" />
+                    </div>
+                }
                 <div className='w-full'>
                     <InputTextarea
                         name="description"
