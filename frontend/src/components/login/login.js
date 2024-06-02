@@ -34,7 +34,7 @@ export const Login = () => {
             <div className="grid h-full flex-column justify-content-center align-content-center">
                 <div className="col-3">
                     <div className="card">
-                        <Card title="Login">
+                        <Card>
                             <div className='flex flex-column align-items-center'>
                                 <img alt="logo" src={logo} height="100" width="100" />
                                 <div className="w-full">
