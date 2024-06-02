@@ -54,7 +54,7 @@ function Income() {
         onAdd={onAdd}
         onCacel={onCacel}
         categoryOptions={getTransactionsCategories('incomes', 'category')}
-        subCategoryOptions={getTransactionsCategories('incomes', 'subCategory')}
+        subCategoryOptions={getTransactionsCategories('incomes', 'subCategory', 'category')}
         type={"incomes"} />
       <Button
         icon="pi pi-plus"

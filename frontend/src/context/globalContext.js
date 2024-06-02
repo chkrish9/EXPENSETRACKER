@@ -162,7 +162,7 @@ export const GlobalProvider = ({ children }) => {
         return history.slice(0, 3)
     }
 
-    const getTransactionsCategories = (type, field) => {
+    const getTransactionsCategories = (type, field, parentField) => {
         let transactions = [];
         if (type === "incomes") {
             transactions = allIncomes
@@ -173,7 +173,8 @@ export const GlobalProvider = ({ children }) => {
             if (!categories.find(category => category.code === transaction[field])) {
                 categories.push({
                     name: getName(transaction[field]),
-                    code: getCode(transaction[field])
+                    code: getCode(transaction[field]),
+                    parent: parentField? getCode(transaction[parentField]):""
                 })
             }
             return categories;

@@ -39,6 +39,8 @@ export const TransactionForm = (
         description: '',
     })
 
+    const [subCategories, setSubCategories] = useState([]);
+
     const { title, amount, date, category, description, subCategory, paidBy } = inputState;
 
     const handleInput = name => e => {
@@ -96,6 +98,7 @@ export const TransactionForm = (
                         id="category"
                         editable
                         onChange={(e) => {
+                            setSubCategories(subCategoryOptions.filter(sub => sub.parent === e.value.code))
                             setInputState({ ...inputState, category: e.value })
                         }}
                         options={categoryOptions}
@@ -112,7 +115,7 @@ export const TransactionForm = (
                         onChange={(e) => {
                             setInputState({ ...inputState, subCategory: e.value })
                         }}
-                        options={subCategoryOptions}
+                        options={subCategories}
                         optionLabel="name"
                         placeholder="Sub Category"
                         className="w-full my-2" />

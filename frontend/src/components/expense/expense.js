@@ -59,7 +59,7 @@ function Expense() {
         onAdd={onAdd}
         onCacel={onCacel}
         categoryOptions={getTransactionsCategories('expenses', 'category')}
-        subCategoryOptions={getTransactionsCategories('expenses', 'subCategory')}
+        subCategoryOptions={getTransactionsCategories('expenses', 'subCategory', 'category')}
         paidByOptions={getTransactionsCategories('expenses', 'paidBy')}
         type={"expenses"} />
       <Button

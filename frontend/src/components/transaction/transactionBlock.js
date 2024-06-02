@@ -1,5 +1,33 @@
 import React from 'react'
-import { bitcoin, groceries, book, card, circle, clothing, food, medical, money, piggy, stocks, takeaway, tv, users } from '../../utils/icons';
+import {
+    bitcoin,
+    bank,
+    entertainment,
+    internet,
+    sendmoney,
+    car,
+    rent,
+    retirement,
+    previousmoney,
+    groceries,
+    book,
+    card,
+    circle,
+    clothing,
+    food,
+    medical,
+    money,
+    piggy,
+    stocks,
+    takeaway,
+    tv,
+    users,
+    gas,
+    trip,
+    health,
+    laundry,
+    expensedefault
+} from '../../utils/icons';
 import { Button } from 'primereact/button';
 
 export const TransactionBlock = ({
@@ -10,42 +38,65 @@ export const TransactionBlock = ({
         if (category === "other" && type === "income") {
             category = "piggy";
         } else if (category === "other" && type === "expense") {
-            category = "circle"
+            category = "expensedefault"
         }
         switch (category) {
             case 'salary':
                 return money;
-            case 'investments':
-                return stocks;
+            case 'previous#month#money':
+                return previousmoney;
+            case 'bank':
+            case 'savings':
+                return bank;
+            case '401k':
+            case 'hsa':
+                return retirement;
             case 'stocks':
-                return users;
+                return stocks;
             case 'crypto':
                 return bitcoin;
-            case 'cashback':
+            case 'cash#back':
+            case 'credit#card#bill#payment':
                 return card;
             case 'piggy':
                 return piggy;
             case 'education':
                 return book;
+            case 'internet':
+                return internet;
+            case 'send#money':
+                return sendmoney;
+            case 'car':
+                return car;
             case 'food':
                 return food;
+            case 'rent':
+                return rent;
             case 'groceries':
                 return groceries;
             case 'health':
                 return medical;
             case 'subscriptions':
                 return tv;
-            case 'takeaways':
+            case 'take#aways':
                 return takeaway;
             case 'entertainment':
-                return clothing;
+                return entertainment;
+            case 'gas':
+                return gas;
+            case 'trip':
+                return trip;
             case 'circle':
                 return circle;
+            case 'health':
+                return health;
+            case 'laundry':
+                return laundry;
             default:
                 if (type === "income") {
                     return piggy;
                 } else if (type === "expense") {
-                    return circle;
+                    return expensedefault;
                 }
         }
     }
