@@ -41,6 +41,11 @@ const expenseSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    user:{
+      type: String,
+      require: true,
+      trim: true,
+    }
   },
   { timestamps: true }
 );

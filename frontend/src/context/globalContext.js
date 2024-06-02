@@ -18,6 +18,7 @@ export const GlobalProvider = ({ children }) => {
     const [allIncomes, setAllIncomes] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
     const [dashboardDate, setDashboardDate] = useState(new Date());
 
     useEffect(()=>{
@@ -41,6 +42,7 @@ export const GlobalProvider = ({ children }) => {
 
     //calculate incomes
     const addIncome = async (income) => {
+        income["user"] = user;
         await axios.post(`${BASE_URL}add-income`, income)
             .catch((err) => {
                 setError(err.response.data.message)
@@ -49,7 +51,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}get-incomes`);
+        const response = await axios.get(`${BASE_URL}get-incomes/${user}`);
         const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllIncomes(response.data);
         setIncomes(data);
@@ -112,8 +114,9 @@ export const GlobalProvider = ({ children }) => {
 
 
     //calculate expenses
-    const addExpense = async (income) => {
-        await axios.post(`${BASE_URL}add-expense`, income)
+    const addExpense = async (expense) => {
+        expense["user"] = user;
+        await axios.post(`${BASE_URL}add-expense`, expense)
             .catch((err) => {
                 setError(err.response.data.message)
             })
@@ -121,7 +124,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}get-expenses`);
+        const response = await axios.get(`${BASE_URL}get-expenses/${user}`);
         const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllExpenses(response.data);
         setExpenses(data);
@@ -205,7 +208,9 @@ export const GlobalProvider = ({ children }) => {
             getUsername,
             getPassword,
             dashboardDate,
-            setDashboardDate
+            setDashboardDate,
+            user, 
+            setUser
         }}>
             {children}
         </GlobalContext.Provider>

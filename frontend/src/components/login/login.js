@@ -10,21 +10,22 @@ import { Toast } from 'primereact/toast';
 
 
 export const Login = () => {
-    const [user, setUser] = useState({
+    const [loginUser, setLoginUser] = useState({
         username: '',
         password: ''
     });
     const toast = useRef(null);
 
-    const { setIsLoggedIn, getUsername, getPassword } = useGlobalContext();
+    const { setIsLoggedIn, getUsername, getPassword, setUser } = useGlobalContext();
 
     const onLogin = () => {
-        if(!user.username || !user.password){
+        if(!loginUser.username || !loginUser.password){
             toast.current.show({severity:'error', summary: 'Error', detail:'Please enter Username and Password', life: 3000});
             return;
         }
-        if (user.username === getUsername() && user.password === getPassword()) {
+        if (loginUser.username === getUsername() && loginUser.password === getPassword()) {
             setIsLoggedIn(true);
+            setUser(loginUser.username);
         }else{
             toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username or Password', life: 3000});
         }
@@ -40,13 +41,13 @@ export const Login = () => {
                                 <img alt="logo" src={logo} height="100" width="100" />
                                 <div className="w-full">
                                     <FloatLabel className="my-4">
-                                        <InputText id="username" className="w-full" value={user.username} onChange={(e) => setUser({ ...user, username: e.target.value })} />
+                                        <InputText id="username" className="w-full" value={loginUser.username} onChange={(e) => setLoginUser({ ...loginUser, username: e.target.value })} />
                                         <label htmlFor="username">Username</label>
                                     </FloatLabel>
                                 </div>
                                 <div className="w-full">
                                     <FloatLabel className="my-4">
-                                        <Password inputId="password" feedback={false} className="w-full password-field" toggleMask value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
+                                        <Password inputId="password" feedback={false} className="w-full password-field" toggleMask value={loginUser.password} onChange={(e) => setLoginUser({ ...loginUser, password: e.target.value })} />
                                         <label htmlFor="password">Password</label>
                                     </FloatLabel>
                                 </div>
