@@ -14,7 +14,7 @@ exports.addExpense = async (req, res) => {
     })
 
     try {
-        if(!title || !amount || !date || !category || !description || !subCategory || !paidBy || !user){
+        if(!title || !amount || !date || !category || !subCategory || !paidBy || !user){
             return res.status(400).json({message: 'All fields are required!'})
         }
 

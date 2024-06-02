@@ -13,7 +13,7 @@ exports.addIncome = async (req, res) => {
     })
 
     try {
-        if(!title || !amount || !date || !category || !description || !subCategory || !user){
+        if(!title || !amount || !date || !category || !subCategory || !user){
             return res.status(400).json({message: 'All fields are required!'})
         }
 

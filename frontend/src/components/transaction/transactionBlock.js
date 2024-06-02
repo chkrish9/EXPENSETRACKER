@@ -32,7 +32,7 @@ import {
 import { Button } from 'primereact/button';
 
 export const TransactionBlock = ({
-    transaction, deleteTransaction, type, categories
+    transaction, deleteTransaction, type, categories, subCategories
 }) => {
 
     const categoryIcon = (category) => {
@@ -110,7 +110,11 @@ export const TransactionBlock = ({
                 <div className="flex flex-wrap align-items-center justify-content-center gap-2">
                     <div className="flex align-items-center gap-2">
                         <span className="text-2xl font-semibold">{categoryIcon(transaction.subCategory)}</span>
-                        <span className="hidden lg:inline-block xl:inline-block">{categories.find(category => category.code === transaction.category)?.name}</span>
+                        <span className='hidden lg:flex xl:flex flex-column align-items-center'>
+                            <span className="">{categories.find(category => category.code === transaction.category)?.name}</span>
+                            <span className="">({subCategories.find(category => category.code === transaction.subCategory)?.name})</span>
+                        </span>
+                        
                     </div>
                 </div>
                 <div className="flex flex-column align-items-center gap-3 py-5">

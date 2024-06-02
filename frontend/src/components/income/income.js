@@ -19,7 +19,8 @@ function Income() {
         deleteTransaction={deleteIncome}
         key={income._id}
         type={"income"}
-        categories={getTransactionsCategories('incomes', 'category')} />;
+        categories={getTransactionsCategories('incomes', 'category')}
+        subCategories={getTransactionsCategories('incomes', 'subCategory', 'category')} />;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;

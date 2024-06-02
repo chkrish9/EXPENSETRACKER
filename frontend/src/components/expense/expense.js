@@ -20,7 +20,8 @@ function Expense() {
         deleteTransaction={deleteExpense}
         key={expense._id}
         type={"expense"}
-        categories={getTransactionsCategories('expenses', 'category')} />;
+        categories={getTransactionsCategories('expenses', 'category')}
+        subCategories={getTransactionsCategories('expenses', 'subCategory', 'category')} />;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;
