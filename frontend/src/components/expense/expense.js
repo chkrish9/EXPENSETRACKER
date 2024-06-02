@@ -31,7 +31,13 @@ function Expense() {
       ...expenseDetails,
       category: typeof expenseDetails.category === "string" ?
         getCode(expenseDetails.category) :
-        expenseDetails.category.code, date: new Date(expenseDetails.date).toLocaleDateString()
+        expenseDetails.category.code, date: new Date(expenseDetails.date).toLocaleDateString(),
+      subCategory: typeof expenseDetails.subCategory === "string" ?
+        getCode(expenseDetails.subCategory) :
+        expenseDetails.subCategory.code,
+      paidBy: typeof expenseDetails.paidBy === "string" ?
+        getCode(expenseDetails.paidBy) :
+        expenseDetails.paidBy.code,
     }
     addExpense(expenseDetails);
     setVisible(false);

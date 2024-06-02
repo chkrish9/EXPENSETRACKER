@@ -30,7 +30,10 @@ function Income() {
       ...incomeDetails,
       category: typeof incomeDetails.category === "string" ?
         getCode(incomeDetails.category) :
-        incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString()
+        incomeDetails.category.code, date: new Date(incomeDetails.date).toLocaleDateString(),
+      subCategory: typeof incomeDetails.subCategory === "string" ?
+        getCode(incomeDetails.subCategory) :
+        incomeDetails.subCategory.code,
     }
     addIncome(incomeDetails);
     setVisible(false);
