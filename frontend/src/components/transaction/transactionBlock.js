@@ -53,7 +53,7 @@ export const TransactionBlock = ({
             <div className="p-2 border-1 surface-border surface-card border-round">
                 <div className="flex flex-wrap align-items-center justify-content-center gap-2">
                     <div className="flex align-items-center gap-2">
-                        <span className="text-2xl font-semibold">{categoryIcon(transaction.category)}</span>
+                        <span className="text-2xl font-semibold">{categoryIcon(transaction.subCategory)}</span>
                         <span className="hidden lg:inline-block xl:inline-block">{categories.find(category => category.code === transaction.category)?.name}</span>
                     </div>
                 </div>
