@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import axios from 'axios'
 import { getName, getCode } from '../utils/utilites';
-
+import moment from 'moment';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -13,6 +13,8 @@ export const GlobalProvider = ({ children }) => {
     const [incomes, setIncomes] = useState([])
     const [expenses, setExpenses] = useState([])
     const [error, setError] = useState(null)
+    const [allIncomes, setAllIncomes] = useState([])
+    const [allExpenses, setAllExpenses] = useState([])
 
     //calculate incomes
     const addIncome = async (income) => {
@@ -24,9 +26,38 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}get-incomes`)
-        setIncomes(response.data)
-        console.log(response.data)
+        const response = await axios.get(`${BASE_URL}get-incomes`);
+        const data = await getTransationsByMonthAndYear(response.data, new Date());
+        setAllIncomes(response.data);
+        setIncomes(data);
+    }
+
+    const getTransationsByMonthAndYear = async (transactions, date) => {
+        return transactions.filter((transaction) => {
+            const isSameYear = moment(transaction.date).isSame(date, 'year');
+            const isSameMonth = moment(transaction.date).isSame(date, 'month');
+            if (isSameYear && isSameMonth) {
+                return transaction;
+            }
+        })
+    }
+
+    const setIncomesByMonthAndYear = async (date) => {
+        const data = await getTransationsByMonthAndYear(allIncomes, date);
+        setIncomes(data);
+
+    }
+
+    const setExpensesByMonthAndYear = async (date) => {
+        const data = await getTransationsByMonthAndYear(allExpenses, date);
+        setExpenses(data);
+    }
+
+    const resetTransaction = async () => {
+        const incomes = await getTransationsByMonthAndYear(allIncomes, new Date());
+        setIncomes(incomes);
+        const expenses = await getTransationsByMonthAndYear(allExpenses, new Date());
+        setExpenses(expenses);
     }
 
     const getTotalByCategories = (transactions, category) => {
@@ -66,9 +97,10 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}get-expenses`)
-        setExpenses(response.data)
-        console.log(response.data)
+        const response = await axios.get(`${BASE_URL}get-expenses`);
+        const data = await getTransationsByMonthAndYear(response.data, new Date());
+        setAllExpenses(response.data);
+        setExpenses(data);
     }
 
     const deleteExpense = async (id) => {
@@ -124,6 +156,9 @@ export const GlobalProvider = ({ children }) => {
             deleteIncome,
             expenses,
             totalIncome,
+            setIncomesByMonthAndYear,
+            setExpensesByMonthAndYear,
+            resetTransaction,
             addExpense,
             getExpenses,
             deleteExpense,

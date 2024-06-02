@@ -3,9 +3,10 @@ import { useGlobalContext } from '../../context/globalContext';
 import { DonutChart } from '../chart/donutChart';
 import { Knob } from 'primereact/knob';
 import { Card } from 'primereact/card';
+import { Calendar } from 'primereact/calendar';
 
 function Dashboard() {
-    const { totalExpenses, getIncomes, getExpenses, getTotalByCategories, incomes, expenses, totalIncome, totalBalanceInPercentage } = useGlobalContext();
+    const { totalExpenses, getIncomes, getExpenses, getTotalByCategories, totalIncome, incomes, expenses, totalBalanceInPercentage, setIncomesByMonthAndYear, setExpensesByMonthAndYear } = useGlobalContext();
     const [incomePieChartData, setIncomePieChartData] = useState({
         labels: [],
         datasets: [
@@ -22,9 +23,18 @@ function Dashboard() {
             }
         ]
     });
+
+    const [date, setDate] = useState(new Date());
+    const maxDate = new Date();
     const options = {
         cutout: '80%'
     };
+
+    const handleDate = async (date) => {
+        await setIncomesByMonthAndYear(date);
+        await setExpensesByMonthAndYear(date);
+        setDate(date);
+    }
 
     useEffect(() => {
         const data = getTotalByCategories(incomes, "category");
@@ -57,11 +67,20 @@ function Dashboard() {
         if (!expenses || expenses.length === 0) {
             getExpenses()
         }
+        setIncomesByMonthAndYear(new Date());
+        setExpensesByMonthAndYear(new Date());
     }, []);
 
 
     return (
         <div className="grid grid-nogutter">
+            <div className="col-12">
+                <div className="card m-3">
+                    <Card >
+                    <label>Month & Year : </label><Calendar value={date} maxDate={maxDate} onChange={(e) => handleDate(e.value)} view="month" dateFormat="mm/yy" />
+                    </Card>
+                </div>
+            </div>
             <div className="col-12 sm:col-12 lg:col-6 xl:col-6">
                 <div className="card m-3">
                     <Card title="Remaining Balance">
