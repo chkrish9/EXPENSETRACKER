@@ -1,5 +1,5 @@
 import React from 'react'
-import { bitcoin, book, card, circle, clothing, food, medical, money, piggy, stocks, takeaway, tv, users } from '../../utils/icons';
+import { bitcoin, groceries, book, card, circle, clothing, food, medical, money, piggy, stocks, takeaway, tv, users } from '../../utils/icons';
 import { Button } from 'primereact/button';
 
 export const TransactionBlock = ({
@@ -27,8 +27,10 @@ export const TransactionBlock = ({
                 return piggy;
             case 'education':
                 return book;
-            case 'groceries':
+            case 'food':
                 return food;
+            case 'groceries':
+                return groceries;
             case 'health':
                 return medical;
             case 'subscriptions':

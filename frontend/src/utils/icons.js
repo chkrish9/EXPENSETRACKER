@@ -27,3 +27,4 @@ export const food = <i className="fa-solid fa-bowl-food text-6xl"></i>
 export const medical = <i className="fa-solid fa-briefcase-medical text-6xl"></i>
 export const tv = <i className="fa-solid fa-tv text-6xl"></i>
 export const circle = <i className="fa-solid fa-circle-dot text-6xl"></i>
+export const groceries = <i class="fa-solid fa-cart-shopping text-6xl"></i>
