@@ -4,6 +4,8 @@ import { getName, getCode } from '../utils/utilites';
 import moment from 'moment';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const DUMMY_USERNAME = process.env.REACT_APP_DUMMY_USERNAME;
+const DUMMY_PASSWORD = process.env.REACT_APP_DUMMY_PASSWORD;
 
 
 const GlobalContext = React.createContext()
@@ -15,6 +17,15 @@ export const GlobalProvider = ({ children }) => {
     const [error, setError] = useState(null)
     const [allIncomes, setAllIncomes] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const getUsername = () => {
+        return DUMMY_USERNAME;
+    }
+
+    const getPassword = () => {
+        return DUMMY_PASSWORD;
+    }
 
     //calculate incomes
     const addIncome = async (income) => {
@@ -169,7 +180,11 @@ export const GlobalProvider = ({ children }) => {
             getTotalByCategories,
             error,
             getTransactionsCategories,
-            setError
+            setError,
+            isLoggedIn,
+            setIsLoggedIn,
+            getUsername,
+            getPassword
         }}>
             {children}
         </GlobalContext.Provider>

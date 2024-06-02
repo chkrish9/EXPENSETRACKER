@@ -30,3 +30,7 @@ body,
 .p-menubar-button{
     display: none;
 }
+
+.password-field .p-icon-field, .password-field .p-icon-field .p-password-input{
+    width:100%;
+}
