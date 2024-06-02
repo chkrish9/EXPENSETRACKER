@@ -17,7 +17,7 @@ export const GlobalProvider = ({ children }) => {
     const [error, setError] = useState(null)
     const [allIncomes, setAllIncomes] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [dashboardDate, setDashboardDate] = useState(new Date());
 
     useEffect(()=>{
