@@ -41,3 +41,4 @@ export const expensedefault = <i class="fa-solid fa-file-invoice-dollar text-6xl
 export const trip = <i class="fa-solid fa-plane-departure text-6xl"></i>
 export const health = <i class="fa-solid fa-briefcase-medical text-6xl"></i>
 export const laundry = <i class="fa-solid fa-jug-detergent text-6xl"></i>
+export const mobile = <i class="fa-solid fa-mobile-screen text-6xl"></i>

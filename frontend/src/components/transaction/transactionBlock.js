@@ -26,6 +26,7 @@ import {
     trip,
     health,
     laundry,
+    mobile,
     expensedefault
 } from '../../utils/icons';
 import { Button } from 'primereact/button';
@@ -64,6 +65,8 @@ export const TransactionBlock = ({
                 return book;
             case 'internet':
                 return internet;
+            case 'mobile':
+                return mobile;
             case 'send#money':
                 return sendmoney;
             case 'car':
