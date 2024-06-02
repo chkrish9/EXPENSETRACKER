@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import axios from 'axios'
 import { getName, getCode } from '../utils/utilites';
 import moment from 'moment';
@@ -19,6 +19,17 @@ export const GlobalProvider = ({ children }) => {
     const [allExpenses, setAllExpenses] = useState([])
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [dashboardDate, setDashboardDate] = useState(new Date());
+
+    useEffect(()=>{
+        if(!isLoggedIn){
+            setIncomes([])
+            setExpenses([])
+            setError(null)
+            setAllIncomes([])
+            setAllExpenses([])
+            setDashboardDate(new Date())
+        }
+    },[isLoggedIn])
 
     const getUsername = () => {
         return DUMMY_USERNAME;

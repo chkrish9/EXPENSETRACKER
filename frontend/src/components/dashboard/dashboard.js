@@ -63,8 +63,8 @@ function Dashboard() {
     useEffect(() => {
         getIncomes()
         getExpenses()
-        setIncomesByMonthAndYear(new Date());
-        setExpensesByMonthAndYear(new Date());
+        setIncomesByMonthAndYear(dashboardDate);
+        setExpensesByMonthAndYear(dashboardDate);
     }, []);
 
 
