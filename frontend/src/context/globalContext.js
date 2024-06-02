@@ -11,16 +11,24 @@ const DUMMY_PASSWORD = process.env.REACT_APP_DUMMY_PASSWORD;
 const GlobalContext = React.createContext()
 
 export const GlobalProvider = ({ children }) => {
-
-    const [incomes, setIncomes] = useState([])
-    const [expenses, setExpenses] = useState([])
-    const [error, setError] = useState(null)
-    const [allIncomes, setAllIncomes] = useState([])
-    const [allExpenses, setAllExpenses] = useState([])
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
     const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     const [dashboardDate, setDashboardDate] = useState(new Date());
 
+    const [incomes, setIncomes] = useState([])
+    const [allIncomes, setAllIncomes] = useState([])
+
+    const [expenses, setExpenses] = useState([])
+    const [allExpenses, setAllExpenses] = useState([])
+
+    const [error, setError] = useState(null)
+    
+
+    /**
+     * User Module
+     */
     useEffect(()=>{
         if(!isLoggedIn){
             setIncomes([])
@@ -40,7 +48,11 @@ export const GlobalProvider = ({ children }) => {
         return DUMMY_PASSWORD;
     }
 
-    //calculate incomes
+
+    /**
+     * 
+     * Income Module
+     */
     const addIncome = async (income) => {
         income["user"] = user;
         await axios.post(`${BASE_URL}add-income`, income)
@@ -57,47 +69,6 @@ export const GlobalProvider = ({ children }) => {
         setIncomes(data);
     }
 
-    const getTransationsByMonthAndYear = async (transactions, date) => {
-        return transactions.filter((transaction) => {
-            const isSameYear = moment(transaction.date).isSame(date, 'year');
-            const isSameMonth = moment(transaction.date).isSame(date, 'month');
-            if (isSameYear && isSameMonth) {
-                return transaction;
-            }
-        })
-    }
-
-    const setIncomesByMonthAndYear = async (date) => {
-        const data = await getTransationsByMonthAndYear(allIncomes, date);
-        setIncomes(data);
-
-    }
-
-    const setExpensesByMonthAndYear = async (date) => {
-        const data = await getTransationsByMonthAndYear(allExpenses, date);
-        setExpenses(data);
-    }
-
-    const resetTransaction = async () => {
-        const incomes = await getTransationsByMonthAndYear(allIncomes, new Date());
-        const expenses = await getTransationsByMonthAndYear(allExpenses, new Date());
-        setDashboardDate(new Date())
-        setIncomes(incomes);
-        setExpenses(expenses);
-    }
-
-    const getTotalByCategories = (transactions, category) => {
-        if (!transactions || (transactions && transactions.length === 0)) return [];
-        return transactions.reduce((totals, transaction) => {
-            if (!totals[transaction[category]]) {
-                totals[transaction[category]] = transaction.amount;
-            } else {
-                totals[transaction[category]] = totals[transaction[category]] + transaction.amount;
-            }
-            return totals;
-        }, {})
-    }
-
     const deleteIncome = async (id) => {
         await axios.delete(`${BASE_URL}delete-income/${id}`)
         getIncomes()
@@ -112,8 +83,18 @@ export const GlobalProvider = ({ children }) => {
         return totalIncome;
     }
 
+    const setIncomesByMonthAndYear = async (date) => {
+        const data = await getTransationsByMonthAndYear(allIncomes, date);
+        setIncomes(data);
 
-    //calculate expenses
+    }
+
+
+    /**
+     * 
+     * Exepense Module 
+     */
+
     const addExpense = async (expense) => {
         expense["user"] = user;
         await axios.post(`${BASE_URL}add-expense`, expense)
@@ -144,22 +125,25 @@ export const GlobalProvider = ({ children }) => {
         return totalIncome;
     }
 
-
-    const totalBalance = () => {
-        return totalIncome() - totalExpenses()
+    const setExpensesByMonthAndYear = async (date) => {
+        const data = await getTransationsByMonthAndYear(allExpenses, date);
+        setExpenses(data);
     }
 
-    const totalBalanceInPercentage = () => {
-        return (totalBalance() / totalIncome()) * 100;
-    }
 
-    const transactionHistory = () => {
-        const history = [...incomes, ...expenses]
-        history.sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt)
+    /**
+     * 
+     * Common Module
+     * 
+     */
+    const getTransationsByMonthAndYear = async (transactions, date) => {
+        return transactions.filter((transaction) => {
+            const isSameYear = moment(transaction.date).isSame(date, 'year');
+            const isSameMonth = moment(transaction.date).isSame(date, 'month');
+            if (isSameYear && isSameMonth) {
+                return transaction;
+            }
         })
-
-        return history.slice(0, 3)
     }
 
     const getTransactionsCategories = (type, field, parentField) => {
@@ -181,37 +165,74 @@ export const GlobalProvider = ({ children }) => {
         }, [])
     }
 
+    const getTotalByCategories = (transactions, category) => {
+        if (!transactions || (transactions && transactions.length === 0)) return [];
+        return transactions.reduce((totals, transaction) => {
+            if (!totals[transaction[category]]) {
+                totals[transaction[category]] = transaction.amount;
+            } else {
+                totals[transaction[category]] = totals[transaction[category]] + transaction.amount;
+            }
+            return totals;
+        }, {})
+    }
+
+    const totalBalance = () => {
+        return totalIncome() - totalExpenses()
+    }
+
+    const totalBalanceInPercentage = () => {
+        return (totalBalance() / totalIncome()) * 100;
+    }
+
+    const resetTransaction = async () => {
+        const incomes = await getTransationsByMonthAndYear(allIncomes, new Date());
+        const expenses = await getTransationsByMonthAndYear(allExpenses, new Date());
+        setDashboardDate(new Date())
+        setIncomes(incomes);
+        setExpenses(expenses);
+    }
+
+    const transactionHistory = () => {
+        const history = [...incomes, ...expenses]
+        history.sort((a, b) => {
+            return new Date(b.createdAt) - new Date(a.createdAt)
+        })
+
+        return history.slice(0, 3)
+    }
 
     return (
         <GlobalContext.Provider value={{
-            addIncome,
-            getIncomes,
-            incomes,
-            deleteIncome,
-            expenses,
-            totalIncome,
-            setIncomesByMonthAndYear,
-            setExpensesByMonthAndYear,
-            resetTransaction,
-            addExpense,
-            getExpenses,
-            deleteExpense,
-            totalExpenses,
-            totalBalance,
-            totalBalanceInPercentage,
-            transactionHistory,
-            getTotalByCategories,
-            error,
-            getTransactionsCategories,
-            setError,
+            user, 
+            setUser,
             isLoggedIn,
             setIsLoggedIn,
             getUsername,
             getPassword,
+
             dashboardDate,
             setDashboardDate,
-            user, 
-            setUser
+
+            incomes,
+            addIncome,
+            getIncomes,
+            deleteIncome,
+            totalIncome,
+            setIncomesByMonthAndYear,
+
+            expenses,
+            addExpense,
+            getExpenses,
+            deleteExpense,
+            totalExpenses,
+            setExpensesByMonthAndYear,
+
+            getTransactionsCategories,
+            getTotalByCategories,
+            totalBalance,
+            totalBalanceInPercentage,
+            resetTransaction
         }}>
             {children}
         </GlobalContext.Provider>
