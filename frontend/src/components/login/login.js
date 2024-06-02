@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card } from 'primereact/card';
 import logo from '../../img/logo.png';
 import { InputText } from "primereact/inputtext";
@@ -6,6 +6,7 @@ import { Password } from 'primereact/password';
 import { FloatLabel } from "primereact/floatlabel";
 import { Button } from 'primereact/button';
 import { useGlobalContext } from '../../context/globalContext';
+import { Toast } from 'primereact/toast';
 
 
 export const Login = () => {
@@ -13,12 +14,19 @@ export const Login = () => {
         username: '',
         password: ''
     });
+    const toast = useRef(null);
 
     const { setIsLoggedIn, getUsername, getPassword } = useGlobalContext();
 
     const onLogin = () => {
+        if(!user.username || !user.password){
+            toast.current.show({severity:'error', summary: 'Error', detail:'Please enter Username and Password', life: 3000});
+            return;
+        }
         if (user.username === getUsername() && user.password === getPassword()) {
             setIsLoggedIn(true);
+        }else{
+            toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username or Password', life: 3000});
         }
     }
     return (
@@ -42,6 +50,7 @@ export const Login = () => {
                                     </FloatLabel>
                                 </div>
                                 <Button label="Login" onClick={onLogin} />
+                                <Toast ref={toast} />
                             </div>
                         </Card>
                     </div>
