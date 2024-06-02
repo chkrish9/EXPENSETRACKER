@@ -6,30 +6,26 @@ import Expense from "./components/expense/expense";
 import logo from './img/logo.png';
 import { Menubar } from 'primereact/menubar';
 import { Tag } from 'primereact/tag';
-let pageName = 'Dashboard';
+import { getMenuItems } from './utils/utilites';
 function App() {
   const [active, setActive] = useState(1);
 
   const displayData = () => {
     switch (active) {
       case 1:
-        pageName = "Dashboard";
         return <Dashboard />;
       case 2:
-        pageName = "Income";
         return <Income />;
       case 3:
-        pageName = "Expense";
         return <Expense />;
       default:
-        pageName = "Dashboard";
         return <Dashboard />;
     }
   };
   const start = (
     <div className="flex flex-row align-items-center">
       <img alt="logo" src={logo} height="40" className="mr-2"/>
-      <Tag severity="info" value={pageName}></Tag>
+      <Tag severity="info" value={getMenuItems().find(item => item.id === active).title}></Tag>
     </div>
   );
   return (

@@ -1,5 +1,5 @@
 import { TabMenu } from 'primereact/tabmenu';
-import {dashboard, expenses, trend} from '../../utils/icons'
+import { getMenuItems } from '../../utils/utilites';
 
 function Navigation({ active, setActive }) {
     const itemRenderer = (item) => (
@@ -7,29 +7,10 @@ function Navigation({ active, setActive }) {
             <span className="font-bold">{item.icon}</span>
         </span>
     );
-    const menuItems = [
-        {
-            id: 1,
-            title: 'Dashboard',
-            icon: dashboard,
-            link: '/dashboard',
-            template: (item) => itemRenderer(item)
-        },
-        {
-            id: 2,
-            title: "Incomes",
-            icon: trend,
-            link: "/dashboard",
-            template: (item) => itemRenderer(item)
-        },
-        {
-            id: 3,
-            title: "Expenses",
-            icon: expenses,
-            link: "/dashboard",
-            template: (item) => itemRenderer(item)
-        },
-    ]
+    const menuItems = getMenuItems().map((item)=>{
+        item.template = (item) => itemRenderer(item);
+        return item;
+    });
     
     return (
         <div className="flex fixed bottom-0 w-full">
