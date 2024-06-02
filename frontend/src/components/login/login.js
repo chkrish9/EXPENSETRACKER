@@ -32,10 +32,11 @@ export const Login = () => {
     return (
         <>
             <div className="grid h-full flex-column justify-content-center align-content-center">
-                <div className="col-3">
+                <div className="col-10 lg:col-6 xl:col-3">
                     <div className="card">
                         <Card>
                             <div className='flex flex-column align-items-center'>
+                                <h1>Expense Tracker</h1>
                                 <img alt="logo" src={logo} height="100" width="100" />
                                 <div className="w-full">
                                     <FloatLabel className="my-4">
