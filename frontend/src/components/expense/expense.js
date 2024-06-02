@@ -15,7 +15,7 @@ function Expense() {
     if (!items || items.length === 0) return null;
 
     let list = items.map((expense) => {
-      return <TransactionBlock transaction={expense} deleteTransaction={deleteExpense} key={expense._id} type={"expense"} categories={getTransactionsCategories(expenses)}/>;
+      return <TransactionBlock transaction={expense} deleteTransaction={deleteExpense} key={expense._id} type={"expense"} categories={getTransactionsCategories('expenses')}/>;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;
@@ -37,7 +37,7 @@ function Expense() {
       <div className="card">
         <DataView value={expenses} listTemplate={listTemplate} />
       </div>
-      <TransactionForm header={"Add Expense"} visible={visible} onAdd={onAdd} onCacel={onCacel} categoryOptions={getTransactionsCategories(expenses)} />
+      <TransactionForm header={"Add Expense"} visible={visible} onAdd={onAdd} onCacel={onCacel} categoryOptions={getTransactionsCategories('expenses')} />
       <Button icon="pi pi-plus" className="fixed add-icon" rounded severity="info" aria-label="Add" onClick={() => setVisible(!visible)} />
     </>
   );

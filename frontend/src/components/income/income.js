@@ -14,7 +14,7 @@ function Income() {
     if (!items || items.length === 0) return null;
 
     let list = items.map((income) => {
-      return <TransactionBlock transaction={income} deleteTransaction={deleteIncome} key={income._id} type={"income"} categories={getTransactionsCategories(incomes)}/>;
+      return <TransactionBlock transaction={income} deleteTransaction={deleteIncome} key={income._id} type={"income"} categories={getTransactionsCategories('incomes')}/>;
     });
 
     return <div className="grid grid-nogutter">{list}</div>;
@@ -35,7 +35,7 @@ function Income() {
       <div className="card">
         <DataView value={incomes} listTemplate={listTemplate} />
       </div>
-      <TransactionForm header={"Add Income"} visible={visible} onAdd={onAdd} onCacel={onCacel} categoryOptions={getTransactionsCategories(incomes)} />
+      <TransactionForm header={"Add Income"} visible={visible} onAdd={onAdd} onCacel={onCacel} categoryOptions={getTransactionsCategories('incomes')} />
       <Button icon="pi pi-plus" className="fixed add-icon" rounded severity="info" aria-label="Add" onClick={() => setVisible(!visible)} />
     </>
   );

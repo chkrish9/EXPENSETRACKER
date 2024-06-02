@@ -6,7 +6,8 @@ import { Card } from 'primereact/card';
 import { Calendar } from 'primereact/calendar';
 
 function Dashboard() {
-    const { totalExpenses, getIncomes, getExpenses, getTotalByCategories, totalIncome, incomes, expenses, totalBalanceInPercentage, setIncomesByMonthAndYear, setExpensesByMonthAndYear } = useGlobalContext();
+    const { totalExpenses, getIncomes, getExpenses, getTotalByCategories, totalIncome, dashboardDate,
+        setDashboardDate, incomes, expenses, totalBalanceInPercentage, setIncomesByMonthAndYear, setExpensesByMonthAndYear } = useGlobalContext();
     const [incomePieChartData, setIncomePieChartData] = useState({
         labels: [],
         datasets: [
@@ -24,7 +25,6 @@ function Dashboard() {
         ]
     });
 
-    const [date, setDate] = useState(new Date());
     const maxDate = new Date();
     const options = {
         cutout: '80%'
@@ -33,7 +33,7 @@ function Dashboard() {
     const handleDate = async (date) => {
         await setIncomesByMonthAndYear(date);
         await setExpensesByMonthAndYear(date);
-        setDate(date);
+        setDashboardDate(date);
     }
 
     useEffect(() => {
@@ -61,12 +61,8 @@ function Dashboard() {
     }, [expenses]);
 
     useEffect(() => {
-        if (!incomes || incomes.length === 0) {
-            getIncomes()
-        }
-        if (!expenses || expenses.length === 0) {
-            getExpenses()
-        }
+        getIncomes()
+        getExpenses()
         setIncomesByMonthAndYear(new Date());
         setExpensesByMonthAndYear(new Date());
     }, []);
@@ -77,7 +73,7 @@ function Dashboard() {
             <div className="col-12">
                 <div className="card m-3">
                     <Card >
-                    <label>Month & Year : </label><Calendar value={date} maxDate={maxDate} onChange={(e) => handleDate(e.value)} view="month" dateFormat="mm/yy" />
+                        <label>Month & Year : </label><Calendar value={dashboardDate} maxDate={maxDate} onChange={(e) => handleDate(e.value)} view="month" dateFormat="mm/yy" />
                     </Card>
                 </div>
             </div>
@@ -86,7 +82,9 @@ function Dashboard() {
                     <Card title="Remaining Balance">
                         <div className='card flex flex-column justify-content-center align-items-center'>
                             {
-                                totalBalanceInPercentage() ? <Knob value={totalBalanceInPercentage().toFixed(1)} size={300} valueTemplate={'{value}%'} readOnly /> : ""
+                                 !isNaN(totalBalanceInPercentage()) ?  ((typeof totalBalanceInPercentage() === 'number' && totalBalanceInPercentage() >= 0 && totalBalanceInPercentage() <= 100) ?
+                                    <Knob value={totalBalanceInPercentage().toFixed(1)} size={300} valueTemplate={'{value}%'} readOnly /> :
+                                    <span className={(totalBalanceInPercentage() > 100 ? 'positive':'negative') + " text-8xl my-8"}>{ totalBalanceInPercentage() + "%" }</span>) : ""
                             }
                         </div>
                     </Card>

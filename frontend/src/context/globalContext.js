@@ -18,6 +18,7 @@ export const GlobalProvider = ({ children }) => {
     const [allIncomes, setAllIncomes] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [dashboardDate, setDashboardDate] = useState(new Date());
 
     const getUsername = () => {
         return DUMMY_USERNAME;
@@ -38,7 +39,7 @@ export const GlobalProvider = ({ children }) => {
 
     const getIncomes = async () => {
         const response = await axios.get(`${BASE_URL}get-incomes`);
-        const data = await getTransationsByMonthAndYear(response.data, new Date());
+        const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllIncomes(response.data);
         setIncomes(data);
     }
@@ -66,8 +67,9 @@ export const GlobalProvider = ({ children }) => {
 
     const resetTransaction = async () => {
         const incomes = await getTransationsByMonthAndYear(allIncomes, new Date());
-        setIncomes(incomes);
         const expenses = await getTransationsByMonthAndYear(allExpenses, new Date());
+        setDashboardDate(new Date())
+        setIncomes(incomes);
         setExpenses(expenses);
     }
 
@@ -109,7 +111,7 @@ export const GlobalProvider = ({ children }) => {
 
     const getExpenses = async () => {
         const response = await axios.get(`${BASE_URL}get-expenses`);
-        const data = await getTransationsByMonthAndYear(response.data, new Date());
+        const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllExpenses(response.data);
         setExpenses(data);
     }
@@ -134,7 +136,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const totalBalanceInPercentage = () => {
-        return (totalExpenses() / totalIncome()) * 100;
+        return (totalBalance() / totalIncome()) * 100;
     }
 
     const transactionHistory = () => {
@@ -146,7 +148,13 @@ export const GlobalProvider = ({ children }) => {
         return history.slice(0, 3)
     }
 
-    const getTransactionsCategories = (transactions) => {
+    const getTransactionsCategories = (type) => {
+        let transactions = [];
+        if (type === "incomes") {
+            transactions = allIncomes
+        } else {
+            transactions = allExpenses
+        }
         return transactions.reduce((categories, transaction) => {
             if (!categories.find(category => category.code === transaction.category)) {
                 categories.push({
@@ -184,7 +192,9 @@ export const GlobalProvider = ({ children }) => {
             isLoggedIn,
             setIsLoggedIn,
             getUsername,
-            getPassword
+            getPassword,
+            dashboardDate,
+            setDashboardDate
         }}>
             {children}
         </GlobalContext.Provider>
