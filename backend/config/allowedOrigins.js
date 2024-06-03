@@ -1,2 +1,2 @@
-const allowedOrigins = process.env.allowedOrigins;
+const allowedOrigins = process.env.ALLOWED_ORIGINS;
 module.exports = allowedOrigins
