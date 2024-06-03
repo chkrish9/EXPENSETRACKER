@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useState } from "react"
 import axios from 'axios'
 import { getName, getCode } from '../utils/utilites';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const DUMMY_USERNAME = process.env.REACT_APP_DUMMY_USERNAME;
-const DUMMY_PASSWORD = process.env.REACT_APP_DUMMY_PASSWORD;
 
 
 const GlobalContext = React.createContext()
@@ -13,7 +12,8 @@ const GlobalContext = React.createContext()
 export const GlobalProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [token, setToken] = useState('');
+    const navigate = useNavigate();
 
     const [dashboardDate, setDashboardDate] = useState(new Date());
 
@@ -23,35 +23,33 @@ export const GlobalProvider = ({ children }) => {
     const [expenses, setExpenses] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
 
-    const [error, setError] = useState(null)
+    const header = () => {
+        return {
+            'Authorization': `Bearer ${token}` 
+        }
+    } 
 
 
     /**
      * User Module
      */
-    useEffect(() => {
-        if (!isLoggedIn) {
-            setIncomes([])
-            setExpenses([])
-            setError(null)
-            setAllIncomes([])
-            setAllExpenses([])
-            setDashboardDate(new Date())
-        }
-    }, [isLoggedIn])
-
-    const getUsername = () => {
-        return DUMMY_USERNAME;
-    }
-
-    const getPassword = () => {
-        return DUMMY_PASSWORD;
-    }
-
     const login = async (user) => {
         return await axios.post(`${BASE_URL}auth`, user).catch((err) => {
-            setError(err.response.data.message)
+            console.error(err.response.data.message)
         })
+    }
+
+    const refresh = async (user) => {
+        return await axios.get(`${BASE_URL}auth/refresh`, user).catch((err) => {
+            console.error(err.response.data.message)
+        })
+    }
+
+    const logout = async () => {
+        await axios.post(`${BASE_URL}auth/logout`).catch((err) => {
+            console.error(err.response.data.message)
+        })
+        navigate('/login')
     }
 
 
@@ -61,27 +59,27 @@ export const GlobalProvider = ({ children }) => {
      */
     const addIncome = async (income) => {
         income["user"] = user;
-        await axios.post(`${BASE_URL}transactions/add-income`, income)
+        await axios.post(`${BASE_URL}transactions/add-income`, income, { headers: header() })
             .catch((err) => {
-                setError(err.response.data.message)
+                console.error(err.response.data.message)
             })
         getIncomes()
     }
 
     const updateIncome = async (id, income) => {
-        await axios.put(`${BASE_URL}transactions/update-income/${id}`, income)
+        await axios.put(`${BASE_URL}transactions/update-income/${id}`, income, { headers: header() })
         getIncomes()
     }
 
     const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}transactions/get-incomes/${user}`);
+        const response = await axios.get(`${BASE_URL}transactions/get-incomes/${user}`, { headers: header() });
         const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllIncomes(response.data);
         setIncomes(data);
     }
 
     const deleteIncome = async (id) => {
-        await axios.delete(`${BASE_URL}transactions/delete-income/${id}`)
+        await axios.delete(`${BASE_URL}transactions/delete-income/${id}`, { headers: header() })
         getIncomes()
     }
 
@@ -108,27 +106,27 @@ export const GlobalProvider = ({ children }) => {
 
     const addExpense = async (expense) => {
         expense["user"] = user;
-        await axios.post(`${BASE_URL}transactions/add-expense`, expense)
+        await axios.post(`${BASE_URL}transactions/add-expense`, expense, { headers: header() })
             .catch((err) => {
-                setError(err.response.data.message)
+                console.error(err.response.data.message)
             })
         getExpenses()
     }
 
     const updateExpense = async (id, expense) => {
-        await axios.put(`${BASE_URL}transactions/update-expense/${id}`, expense)
+        await axios.put(`${BASE_URL}transactions/update-expense/${id}`, expense, { headers: header() })
         getExpenses()
     }
 
     const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}transactions/get-expenses/${user}`);
+        const response = await axios.get(`${BASE_URL}transactions/get-expenses/${user}`, { headers: header() });
         const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllExpenses(response.data);
         setExpenses(data);
     }
 
     const deleteExpense = async (id) => {
-        await axios.delete(`${BASE_URL}transactions/delete-expense/${id}`)
+        await axios.delete(`${BASE_URL}transactions/delete-expense/${id}`, { headers: header() })
         getExpenses()
     }
 
@@ -213,11 +211,11 @@ export const GlobalProvider = ({ children }) => {
         <GlobalContext.Provider value={{
             user,
             setUser,
-            isLoggedIn,
-            setIsLoggedIn,
-            getUsername,
-            getPassword,
+            token,
+            setToken,
             login,
+            logout,
+            refresh,
 
             dashboardDate,
             setDashboardDate,

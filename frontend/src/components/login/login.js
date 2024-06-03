@@ -7,6 +7,7 @@ import { FloatLabel } from "primereact/floatlabel";
 import { Button } from 'primereact/button';
 import { useGlobalContext } from '../../context/globalContext';
 import { Toast } from 'primereact/toast';
+import { useNavigate } from 'react-router-dom'
 
 
 export const Login = () => {
@@ -14,25 +15,32 @@ export const Login = () => {
         username: '',
         password: ''
     });
+    const navigate = useNavigate();
     const toast = useRef(null);
 
-    const { setIsLoggedIn, getUsername, getPassword, setUser } = useGlobalContext();
+    const { setUser, login, setToken } = useGlobalContext();
 
-    const onLogin = () => {
-        if(!loginUser.username || !loginUser.password){
-            toast.current.show({severity:'error', summary: 'Error', detail:'Please enter Username and Password', life: 3000});
+    const onLogin = async () => {
+        if (!loginUser.username || !loginUser.password) {
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Please enter Username and Password', life: 3000 });
             return;
         }
-        if (loginUser.username === getUsername() && loginUser.password === getPassword()) {
-            setIsLoggedIn(true);
+        try {
+            const response = await login(loginUser);
+            setToken(response.data.accessToken);
             setUser(loginUser.username);
-        }else{
-            toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username or Password', life: 3000});
+            setLoginUser({
+                username: '',
+                password: ''
+            })
+            navigate('/dashboard')
+        } catch (error) {
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Wrong Username or Password', life: 3000 });
         }
     }
     return (
         <>
-            <div className="grid h-full flex-column justify-content-center align-content-center">
+            <div className="flex h-full flex-column justify-content-center align-items-center">
                 <div className="col-10 lg:col-6 xl:col-3">
                     <div className="card">
                         <Card>
