@@ -7,8 +7,10 @@ import { TransactionBlock } from '../transaction/transactionBlock';
 import { getCode } from '../../utils/utilites';
 
 function Income() {
-  const { incomes, addIncome, deleteIncome, totalIncome, getTransactionsCategories } = useGlobalContext();
+  const { incomes, addIncome, deleteIncome, updateIncome, totalIncome, getTransactionsCategories } = useGlobalContext();
   const [visible, setVisible] = useState(false);
+  const [income, setIncome] = useState(null);
+  const [mode, setMode] = useState('Add');
 
   const listTemplate = ((items) => {
     if (!items || items.length === 0) return null;
@@ -17,6 +19,7 @@ function Income() {
       return <TransactionBlock
         transaction={income}
         deleteTransaction={deleteIncome}
+        updateTransaction={onUpdate}
         key={income._id}
         type={"income"}
         categories={getTransactionsCategories('incomes', 'category')}
@@ -26,7 +29,13 @@ function Income() {
     return <div className="grid grid-nogutter">{list}</div>;
   });
 
-  const onAdd = (incomeDetails) => {
+  const onUpdate = (income) => {
+    setIncome(income);
+    setMode("Update");
+    setVisible(true);
+  }
+
+  const onSubmit = (incomeDetails) => {
     incomeDetails = {
       ...incomeDetails,
       category: typeof incomeDetails.category === "string" ?
@@ -36,11 +45,18 @@ function Income() {
         getCode(incomeDetails.subCategory) :
         incomeDetails.subCategory.code,
     }
-    addIncome(incomeDetails);
+    if (incomeDetails._id) {
+      updateIncome(incomeDetails._id, incomeDetails);
+      setIncome(null);
+    } else {
+      addIncome(incomeDetails);
+    }
+    setMode("Add");
     setVisible(false);
   }
 
-  const onCacel = () => {
+  const onCancel = () => {
+    setIncome(null);
     setVisible(false);
   }
   return (
@@ -50,20 +66,25 @@ function Income() {
         <DataView value={incomes} listTemplate={listTemplate} />
       </div>
       <TransactionForm
-        header={"Add Income"}
+        header={mode === "Add" ? "Add Income" : "Update Income"}
         visible={visible}
-        onAdd={onAdd}
-        onCacel={onCacel}
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        mode={mode}
         categoryOptions={getTransactionsCategories('incomes', 'category')}
         subCategoryOptions={getTransactionsCategories('incomes', 'subCategory', 'category')}
-        type={"incomes"} />
+        type={"incomes"}
+        transaction={income} />
       <Button
         icon="pi pi-plus"
         className="fixed add-icon"
         rounded
         severity="info"
         aria-label="Add"
-        onClick={() => setVisible(!visible)} />
+        onClick={() => {
+          setMode("Add");
+          setVisible(!visible)
+        }} />
     </>
   );
 }

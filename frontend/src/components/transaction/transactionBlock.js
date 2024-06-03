@@ -13,7 +13,6 @@ import {
     book,
     card,
     circle,
-    clothing,
     food,
     medical,
     money,
@@ -21,7 +20,6 @@ import {
     stocks,
     takeaway,
     tv,
-    users,
     gas,
     trip,
     health,
@@ -32,7 +30,7 @@ import {
 import { Button } from 'primereact/button';
 
 export const TransactionBlock = ({
-    transaction, deleteTransaction, type, categories, subCategories
+    transaction, deleteTransaction, updateTransaction, type, categories, subCategories
 }) => {
 
     const categoryIcon = (category) => {
@@ -109,12 +107,17 @@ export const TransactionBlock = ({
             <div className="p-2 border-1 surface-border surface-card border-round">
                 <div className="flex flex-wrap align-items-center justify-content-center gap-2">
                     <div className="flex align-items-center gap-2">
-                        <span className="text-2xl font-semibold">{categoryIcon(transaction.subCategory)}</span>
-                        <span className='hidden lg:flex xl:flex flex-column align-items-center'>
-                            <span className="">{categories.find(category => category.code === transaction.category)?.name}</span>
-                            <span className="">({subCategories.find(category => category.code === transaction.subCategory)?.name})</span>
-                        </span>
-                        
+                        {
+                            (categories && transaction.category && subCategories && transaction.subCategory) ? (
+                                <>
+                                    <span className="text-2xl font-semibold">{categoryIcon(transaction.subCategory)}</span>
+                                    <span className='hidden lg:flex xl:flex flex-column align-items-center'>
+                                        <span className="">{categories.find(category => category.code === transaction.category)?.name}</span>
+                                        <span className="">({subCategories.find(category => category.code === transaction.subCategory)?.name})</span>
+                                    </span>
+                                </>
+                            ) : ""
+                        }
                     </div>
                 </div>
                 <div className="flex flex-column align-items-center gap-3 py-5">
@@ -122,7 +125,8 @@ export const TransactionBlock = ({
                     <div className="font-bold">{transaction.title}</div>
                 </div>
                 <div className="flex justify-content-center">
-                    <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteTransaction(transaction._id)}></Button>
+                    <Button icon="pi pi-pencil" className="p-button-rounded mr-1" severity="info" onClick={() => updateTransaction(JSON.parse(JSON.stringify(transaction)))}></Button>
+                    <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => deleteTransaction(transaction._id)}></Button>
                 </div>
             </div>
         </div>

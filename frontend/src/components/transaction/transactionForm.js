@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -9,22 +9,22 @@ import { InputTextarea } from 'primereact/inputtextarea';
 
 
 export const TransactionForm = (
-    { visible, onAdd, onCacel, categoryOptions, subCategoryOptions, paidByOptions, header, type }) => {
+    { visible, onSubmit, onCancel, categoryOptions, subCategoryOptions, paidByOptions, header, type, mode, transaction }) => {
     const footerContent = (
         <div>
             <Button
                 label="Cancel"
                 icon="pi pi-times"
                 onClick={() => {
-                    onCacel();
+                    onCancel();
                     resetInputState();
                 }}
                 className="p-button-text" />
             <Button
-                label="Add"
+                label={mode === "Add" ? "Add" : "Update"}
                 icon="pi pi-check"
                 onClick={() => {
-                    onAdd(inputState);
+                    onSubmit(inputState);
                     resetInputState();
                 }} autoFocus />
         </div>
@@ -59,9 +59,19 @@ export const TransactionForm = (
         })
     }
 
+    useEffect(() => {
+        if (transaction) {
+            setSubCategories(subCategoryOptions.filter(sub => sub.parent === transaction.category))
+            transaction.category = categoryOptions.find(cat => cat.code === transaction.category);
+            transaction.subCategory = subCategoryOptions.find(cat => cat.code === transaction.subCategory);
+            transaction.date = new Date(transaction.date);
+            setInputState(transaction);
+        }
+    }, [transaction])
+
     return (
         <div className="card flex justify-content-center">
-            <Dialog header={header} visible={visible} onHide={() => { if (!visible) return; onCacel(false); }} footer={footerContent}>
+            <Dialog header={header} visible={visible} onHide={() => { if (!visible) return; onCancel(false); }} footer={footerContent}>
                 <div className='w-full'>
                     <InputText
                         value={title}
@@ -83,7 +93,7 @@ export const TransactionForm = (
                 <div className='w-full'>
                     <Calendar
                         placeholder='Date'
-                        dateFormat="dd/mm/yy"
+                        dateFormat="mm/dd/yy"
                         className='w-full my-2'
                         onChange={(e) => {
                             setInputState({ ...inputState, date: e.value })
@@ -99,7 +109,7 @@ export const TransactionForm = (
                         editable
                         onChange={(e) => {
                             setSubCategories(subCategoryOptions.filter(sub => sub.parent === e.value.code))
-                            setInputState({ ...inputState, category: e.value })
+                            setInputState({ ...inputState, category: e.value, subCategory:'' })
                         }}
                         options={categoryOptions}
                         optionLabel="name"

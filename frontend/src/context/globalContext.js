@@ -11,7 +11,7 @@ const DUMMY_PASSWORD = process.env.REACT_APP_DUMMY_PASSWORD;
 const GlobalContext = React.createContext()
 
 export const GlobalProvider = ({ children }) => {
-    
+
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -24,13 +24,13 @@ export const GlobalProvider = ({ children }) => {
     const [allExpenses, setAllExpenses] = useState([])
 
     const [error, setError] = useState(null)
-    
+
 
     /**
      * User Module
      */
-    useEffect(()=>{
-        if(!isLoggedIn){
+    useEffect(() => {
+        if (!isLoggedIn) {
             setIncomes([])
             setExpenses([])
             setError(null)
@@ -38,7 +38,7 @@ export const GlobalProvider = ({ children }) => {
             setAllExpenses([])
             setDashboardDate(new Date())
         }
-    },[isLoggedIn])
+    }, [isLoggedIn])
 
     const getUsername = () => {
         return DUMMY_USERNAME;
@@ -59,6 +59,11 @@ export const GlobalProvider = ({ children }) => {
             .catch((err) => {
                 setError(err.response.data.message)
             })
+        getIncomes()
+    }
+
+    const updateIncome = async (id, income) => {
+        await axios.put(`${BASE_URL}update-income/${id}`,income)
         getIncomes()
     }
 
@@ -101,6 +106,11 @@ export const GlobalProvider = ({ children }) => {
             .catch((err) => {
                 setError(err.response.data.message)
             })
+        getExpenses()
+    }
+
+    const updateExpense = async (id, expense) => {
+        await axios.put(`${BASE_URL}update-expense/${id}`,expense)
         getExpenses()
     }
 
@@ -158,7 +168,7 @@ export const GlobalProvider = ({ children }) => {
                 categories.push({
                     name: getName(transaction[field]),
                     code: getCode(transaction[field]),
-                    parent: parentField? getCode(transaction[parentField]):""
+                    parent: parentField ? getCode(transaction[parentField]) : ""
                 })
             }
             return categories;
@@ -193,18 +203,9 @@ export const GlobalProvider = ({ children }) => {
         setExpenses(expenses);
     }
 
-    const transactionHistory = () => {
-        const history = [...incomes, ...expenses]
-        history.sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt)
-        })
-
-        return history.slice(0, 3)
-    }
-
     return (
         <GlobalContext.Provider value={{
-            user, 
+            user,
             setUser,
             isLoggedIn,
             setIsLoggedIn,
@@ -216,6 +217,7 @@ export const GlobalProvider = ({ children }) => {
 
             incomes,
             addIncome,
+            updateIncome,
             getIncomes,
             deleteIncome,
             totalIncome,
@@ -223,6 +225,7 @@ export const GlobalProvider = ({ children }) => {
 
             expenses,
             addExpense,
+            updateExpense,
             getExpenses,
             deleteExpense,
             totalExpenses,

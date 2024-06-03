@@ -7,9 +7,11 @@ import { TransactionBlock } from '../transaction/transactionBlock';
 import { getCode } from '../../utils/utilites';
 
 function Expense() {
-  const { expenses, addExpense, getTransactionsCategories, deleteExpense, totalExpenses } = useGlobalContext();
+  const { expenses, addExpense, updateExpense, getTransactionsCategories, deleteExpense, totalExpenses } = useGlobalContext();
 
   const [visible, setVisible] = useState(false);
+  const [expense, setExpense] = useState(null);
+  const [mode, setMode] = useState('Add');
 
   const listTemplate = ((items) => {
     if (!items || items.length === 0) return null;
@@ -18,6 +20,7 @@ function Expense() {
       return <TransactionBlock
         transaction={expense}
         deleteTransaction={deleteExpense}
+        updateTransaction={onUpdate}
         key={expense._id}
         type={"expense"}
         categories={getTransactionsCategories('expenses', 'category')}
@@ -27,7 +30,13 @@ function Expense() {
     return <div className="grid grid-nogutter">{list}</div>;
   });
 
-  const onAdd = (expenseDetails) => {
+  const onUpdate = (expense) => {
+    setExpense(expense);
+    setMode("Update");
+    setVisible(true);
+  }
+
+  const onSubmit = (expenseDetails) => {
     expenseDetails = {
       ...expenseDetails,
       category: typeof expenseDetails.category === "string" ?
@@ -40,11 +49,18 @@ function Expense() {
         getCode(expenseDetails.paidBy) :
         expenseDetails.paidBy.code,
     }
-    addExpense(expenseDetails);
+    if (expenseDetails._id) {
+      updateExpense(expenseDetails._id, expenseDetails);
+      setExpense(null);
+    } else {
+      addExpense(expenseDetails);
+    }
+    setMode("Add");
     setVisible(false);
   }
 
-  const onCacel = () => {
+  const onCancel = () => {
+    setExpense(null);
     setVisible(false);
   }
 
@@ -55,21 +71,26 @@ function Expense() {
         <DataView value={expenses} listTemplate={listTemplate} />
       </div>
       <TransactionForm
-        header={"Add Expense"}
+        header={mode === "Add" ? "Add Expense" : "Update Expense"}
         visible={visible}
-        onAdd={onAdd}
-        onCacel={onCacel}
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        mode={mode}
         categoryOptions={getTransactionsCategories('expenses', 'category')}
         subCategoryOptions={getTransactionsCategories('expenses', 'subCategory', 'category')}
         paidByOptions={getTransactionsCategories('expenses', 'paidBy')}
-        type={"expenses"} />
+        type={"expenses"}
+        transaction={expense} />
       <Button
         icon="pi pi-plus"
         className="fixed add-icon"
         rounded
         severity="info"
         aria-label="Add"
-        onClick={() => setVisible(!visible)} />
+        onClick={() =>{
+          setMode("Add");
+          setVisible(!visible)
+        }} />
     </>
   );
 }
