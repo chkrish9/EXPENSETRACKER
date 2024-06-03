@@ -1,5 +1,2 @@
-const allowedOrigins = [
-    'https://expense-tracker-et.vercel.app/'
-]
-
+const allowedOrigins = process.env.allowedOrigins;
 module.exports = allowedOrigins
