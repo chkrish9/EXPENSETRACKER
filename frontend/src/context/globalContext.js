@@ -55,7 +55,7 @@ export const GlobalProvider = ({ children }) => {
      */
     const addIncome = async (income) => {
         income["user"] = user;
-        await axios.post(`${BASE_URL}add-income`, income)
+        await axios.post(`${BASE_URL}transactions/add-income`, income)
             .catch((err) => {
                 setError(err.response.data.message)
             })
@@ -63,19 +63,19 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const updateIncome = async (id, income) => {
-        await axios.put(`${BASE_URL}update-income/${id}`,income)
+        await axios.put(`${BASE_URL}transactions/update-income/${id}`,income)
         getIncomes()
     }
 
     const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}get-incomes/${user}`);
+        const response = await axios.get(`${BASE_URL}transactions/get-incomes/${user}`);
         const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllIncomes(response.data);
         setIncomes(data);
     }
 
     const deleteIncome = async (id) => {
-        await axios.delete(`${BASE_URL}delete-income/${id}`)
+        await axios.delete(`${BASE_URL}transactions/delete-income/${id}`)
         getIncomes()
     }
 
@@ -102,7 +102,7 @@ export const GlobalProvider = ({ children }) => {
 
     const addExpense = async (expense) => {
         expense["user"] = user;
-        await axios.post(`${BASE_URL}add-expense`, expense)
+        await axios.post(`${BASE_URL}transactions/add-expense`, expense)
             .catch((err) => {
                 setError(err.response.data.message)
             })
@@ -110,19 +110,19 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const updateExpense = async (id, expense) => {
-        await axios.put(`${BASE_URL}update-expense/${id}`,expense)
+        await axios.put(`${BASE_URL}transactions/update-expense/${id}`,expense)
         getExpenses()
     }
 
     const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}get-expenses/${user}`);
+        const response = await axios.get(`${BASE_URL}transactions/get-expenses/${user}`);
         const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
         setAllExpenses(response.data);
         setExpenses(data);
     }
 
     const deleteExpense = async (id) => {
-        await axios.delete(`${BASE_URL}delete-expense/${id}`)
+        await axios.delete(`${BASE_URL}transactions/delete-expense/${id}`)
         getExpenses()
     }
 

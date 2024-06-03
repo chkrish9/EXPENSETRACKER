@@ -4,7 +4,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 
 const corsOptions = require('./config/corsOptions')
-const api = require('./routes/transactions');
+const routes = require('./routes');
 const db = require("./config/db");
 const { logger, logEvents } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
@@ -24,7 +24,7 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
 
 app.use('/', require('./routes/root'))
-app.use('/api/v1', api);
+app.use('/api/v1', routes);
 
 app.all('*', (req, res) => {
     res.status(404)
