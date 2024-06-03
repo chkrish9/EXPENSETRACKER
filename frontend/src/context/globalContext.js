@@ -48,6 +48,12 @@ export const GlobalProvider = ({ children }) => {
         return DUMMY_PASSWORD;
     }
 
+    const login = async (user) => {
+        return await axios.post(`${BASE_URL}auth`, user).catch((err) => {
+            setError(err.response.data.message)
+        })
+    }
+
 
     /**
      * 
@@ -63,7 +69,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const updateIncome = async (id, income) => {
-        await axios.put(`${BASE_URL}transactions/update-income/${id}`,income)
+        await axios.put(`${BASE_URL}transactions/update-income/${id}`, income)
         getIncomes()
     }
 
@@ -110,7 +116,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const updateExpense = async (id, expense) => {
-        await axios.put(`${BASE_URL}transactions/update-expense/${id}`,expense)
+        await axios.put(`${BASE_URL}transactions/update-expense/${id}`, expense)
         getExpenses()
     }
 
@@ -211,6 +217,7 @@ export const GlobalProvider = ({ children }) => {
             setIsLoggedIn,
             getUsername,
             getPassword,
+            login,
 
             dashboardDate,
             setDashboardDate,

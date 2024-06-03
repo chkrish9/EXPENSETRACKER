@@ -22,8 +22,7 @@ exports.login = async (req, res) => {
     const accessToken = jwt.sign(
         {
             "UserInfo": {
-                "username": foundUser.username,
-                "roles": foundUser.roles
+                "username": foundUser.username
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -44,7 +43,7 @@ exports.login = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
     })
 
-    // Send accessToken containing username and roles 
+    // Send accessToken containing username 
     res.json({ accessToken })
 }
 
@@ -68,8 +67,7 @@ exports.refresh = (req, res) => {
             const accessToken = jwt.sign(
                 {
                     "UserInfo": {
-                        "username": foundUser.username,
-                        "roles": foundUser.roles
+                        "username": foundUser.username
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
