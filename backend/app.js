@@ -1,17 +1,25 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./config/db");
 const path = require('path')
+const cookieParser = require('cookie-parser')
+
 const corsOptions = require('./config/corsOptions')
 const api = require('./routes/transactions');
+const db = require("./config/db");
+const { logger, logEvents } = require('./middleware/logger')
+const errorHandler = require('./middleware/errorHandler')
 
 require("dotenv").config();
 
 const app = express();
 
+db();
+
 //middleware
+app.use(logger)
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use(cookieParser())
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
@@ -29,7 +37,7 @@ app.all('*', (req, res) => {
     }
 })
 
-db();
+app.use(errorHandler)
 
 module.exports = app;
 
