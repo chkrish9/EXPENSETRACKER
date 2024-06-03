@@ -28,6 +28,7 @@ import {
     expensedefault
 } from '../../utils/icons';
 import { Button } from 'primereact/button';
+import moment from 'moment';
 
 export const TransactionBlock = ({
     transaction, deleteTransaction, updateTransaction, type, categories, subCategories
@@ -123,6 +124,7 @@ export const TransactionBlock = ({
                 <div className="flex flex-column align-items-center gap-3 py-5">
                     <span className='text-5xl'>${transaction.amount}</span>
                     <div className="font-bold">{transaction.title}</div>
+                    <div className="font-bold"><span className='pi pi-calendar'></span>{moment(transaction.date).format("MM/DD/yyyy")}</div>
                 </div>
                 <div className="flex justify-content-center">
                     <Button icon="pi pi-pencil" className="p-button-rounded mr-1" severity="info" onClick={() => updateTransaction(JSON.parse(JSON.stringify(transaction)))}></Button>
