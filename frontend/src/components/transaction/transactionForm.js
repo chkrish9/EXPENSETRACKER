@@ -99,6 +99,7 @@ export const TransactionForm = ({
         onHide={() => {
           if (!visible) return;
           onCancel(false);
+          resetInputState();
         }}
         footer={footerContent}
       >
