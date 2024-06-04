@@ -83,6 +83,9 @@ export const TransactionForm = ({
       transaction.subCategory = subCategoryOptions.find(
         (cat) => cat.code === transaction.subCategory
       );
+      transaction.account = accountOptions.find(
+        (account) => account.code === transaction.account
+      );
       transaction.date = new Date(transaction.date);
       setInputState(transaction);
     }
