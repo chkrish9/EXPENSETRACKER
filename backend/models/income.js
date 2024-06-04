@@ -32,6 +32,15 @@ const incomeSchema = new mongoose.Schema(
       require: true,
       trim: true,
     },
+    account: {
+      type: String,
+      require: true,
+      trim: true,
+    },
+    isRecurrence: {
+      type: Boolean,
+      trim: true,
+    },
     description: {
       type: String,
       trim: true,
