@@ -1,6 +1,6 @@
 const incomeSchema = require("../models/income");
 exports.addIncome = async (req, res) => {
-    const { title, amount, date, category, subCategory, description, user } = req.body;
+    const { title, amount, date, category, subCategory, description, account, isRecurrence, user } = req.body;
 
     const income = incomeSchema({
         title,
@@ -8,12 +8,14 @@ exports.addIncome = async (req, res) => {
         date,
         category,
         subCategory,
+        account,
+        isRecurrence,
         description,
         user
     })
 
     try {
-        if (!title || !amount || !date || !category || !subCategory || !user) {
+        if (!title || !amount || !date || !category || !subCategory || !account || !user) {
             return res.status(400).json({ message: 'All fields are required!' })
         }
 
