@@ -36,6 +36,7 @@ function Income() {
             "subCategory",
             "category"
           )}
+          accounts={getTransactionsCategories("incomes", "account")}
         />
       );
     });
