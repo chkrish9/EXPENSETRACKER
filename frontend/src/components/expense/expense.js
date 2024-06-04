@@ -37,6 +37,7 @@ function Expense() {
             "subCategory",
             "category"
           )}
+          accounts={getTransactionsCategories("expenses", "account")}
         />
       );
     });
