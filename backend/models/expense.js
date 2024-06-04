@@ -32,7 +32,7 @@ const expenseSchema = new mongoose.Schema(
       require: true,
       trim: true,
     },
-    paidBy: {
+    account: {
       type: String,
       require: true,
       trim: true,
