@@ -1,16 +1,13 @@
 import React, { useContext, useState } from "react"
-import axios from 'axios'
 import { getName, getCode } from '../utils/utilites';
 import moment from 'moment';
-import { useNavigate } from 'react-router-dom'
-
-const BASE_URL = process.env.REACT_APP_BASE_URL;
-
+import { useNavigate } from 'react-router-dom';
+import axios, { axiosPrivate } from "../utils/axios";
 
 const GlobalContext = React.createContext()
 
 export const GlobalProvider = ({ children }) => {
-
+   
     const [user, setUser] = useState(null);
     const [token, setToken] = useState('');
     const navigate = useNavigate();
@@ -23,32 +20,56 @@ export const GlobalProvider = ({ children }) => {
     const [expenses, setExpenses] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
 
-    const header = () => {
-        return {
-            'Authorization': `Bearer ${token}` 
+
+ 
+    axiosPrivate.interceptors.request.use(
+        config => {
+            if (!config.headers['Authorization']) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return config;
+        }, (error) => Promise.reject(error)
+    );
+
+    axiosPrivate.interceptors.response.use(
+        response => response,
+        async (error) => {
+            const prevRequest = error?.config;
+            if (error?.response?.status === 403 && !prevRequest?.sent) {
+                prevRequest.sent = true;
+                const newAccessToken = await refresh();
+                setToken(newAccessToken);
+                prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                return axiosPrivate(prevRequest);
+            }
+            return Promise.reject(error);
         }
-    } 
-
-
+    );
     /**
      * User Module
      */
     const login = async (user) => {
-        return await axios.post(`${BASE_URL}auth`, user, { headers : {
-             withCredentials: true // Necessary to receive cookies
-        }}).catch((err) => {
+        return await axios.post(`auth`, user, {
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            withCredentials: true
+        }).catch((err) => {
             console.error(err.response.data.message)
         })
     }
 
-    const refresh = async (user) => {
-        return await axios.get(`${BASE_URL}auth/refresh`, user).catch((err) => {
-            console.error(err.response.data.message)
-        })
+    const refresh = async () => {
+        const response = await axiosPrivate.get('auth/refresh', {
+            withCredentials: true
+        });
+        setUser(localStorage.getItem("username"));
+        return response.data.accessToken;
     }
 
     const logout = async () => {
-        await axios.post(`${BASE_URL}auth/logout`).catch((err) => {
+        await axios.post(`auth/logout`).catch((err) => {
             console.error(err.response.data.message)
         })
         navigate('/login')
@@ -61,7 +82,7 @@ export const GlobalProvider = ({ children }) => {
      */
     const addIncome = async (income) => {
         income["user"] = user;
-        await axios.post(`${BASE_URL}transactions/add-income`, income, { headers: header() })
+        await axiosPrivate.post(`transactions/add-income`, income)
             .catch((err) => {
                 console.error(err.response.data.message)
             })
@@ -69,19 +90,19 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const updateIncome = async (id, income) => {
-        await axios.put(`${BASE_URL}transactions/update-income/${id}`, income, { headers: header() })
+        await axiosPrivate.put(`transactions/update-income/${id}`, income)
         getIncomes()
     }
 
     const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}transactions/get-incomes/${user}`, { headers: header() });
-        const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
+        const response = await axiosPrivate.get(`transactions/get-incomes/${user}`);
+        const data = await getTransactionsByMonthAndYear(response.data, dashboardDate);
         setAllIncomes(response.data);
         setIncomes(data);
     }
 
     const deleteIncome = async (id) => {
-        await axios.delete(`${BASE_URL}transactions/delete-income/${id}`, { headers: header() })
+        await axiosPrivate.delete(`transactions/delete-income/${id}`)
         getIncomes()
     }
 
@@ -95,7 +116,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const setIncomesByMonthAndYear = async (date) => {
-        const data = await getTransationsByMonthAndYear(allIncomes, date);
+        const data = await getTransactionsByMonthAndYear(allIncomes, date);
         setIncomes(data);
 
     }
@@ -108,7 +129,7 @@ export const GlobalProvider = ({ children }) => {
 
     const addExpense = async (expense) => {
         expense["user"] = user;
-        await axios.post(`${BASE_URL}transactions/add-expense`, expense, { headers: header() })
+        await axiosPrivate.post(`transactions/add-expense`, expense)
             .catch((err) => {
                 console.error(err.response.data.message)
             })
@@ -116,19 +137,19 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const updateExpense = async (id, expense) => {
-        await axios.put(`${BASE_URL}transactions/update-expense/${id}`, expense, { headers: header() })
+        await axiosPrivate.put(`transactions/update-expense/${id}`, expense)
         getExpenses()
     }
 
     const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}transactions/get-expenses/${user}`, { headers: header() });
-        const data = await getTransationsByMonthAndYear(response.data, dashboardDate);
+        const response = await axiosPrivate.get(`transactions/get-expenses/${user}`);
+        const data = await getTransactionsByMonthAndYear(response.data, dashboardDate);
         setAllExpenses(response.data);
         setExpenses(data);
     }
 
     const deleteExpense = async (id) => {
-        await axios.delete(`${BASE_URL}transactions/delete-expense/${id}`, { headers: header() })
+        await axiosPrivate.delete(`transactions/delete-expense/${id}`)
         getExpenses()
     }
 
@@ -142,7 +163,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const setExpensesByMonthAndYear = async (date) => {
-        const data = await getTransationsByMonthAndYear(allExpenses, date);
+        const data = await getTransactionsByMonthAndYear(allExpenses, date);
         setExpenses(data);
     }
 
@@ -152,10 +173,11 @@ export const GlobalProvider = ({ children }) => {
      * Common Module
      * 
      */
-    const getTransationsByMonthAndYear = async (transactions, date) => {
+    const getTransactionsByMonthAndYear = async (transactions, date) => {
         return transactions.filter((transaction) => {
-            const isSameYear = moment(transaction.date).isSame(date, 'year');
-            const isSameMonth = moment(transaction.date).isSame(date, 'month');
+            date = moment(date).local();
+            const isSameYear = moment(transaction.date).local().isSame(date, 'year');
+            const isSameMonth = moment(transaction.date).local().isSame(date, 'month');
             if (isSameYear && isSameMonth) {
                 return transaction;
             }
@@ -202,8 +224,8 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const resetTransaction = async () => {
-        const incomes = await getTransationsByMonthAndYear(allIncomes, new Date());
-        const expenses = await getTransationsByMonthAndYear(allExpenses, new Date());
+        const incomes = await getTransactionsByMonthAndYear(allIncomes, new Date());
+        const expenses = await getTransactionsByMonthAndYear(allExpenses, new Date());
         setDashboardDate(new Date())
         setIncomes(incomes);
         setExpenses(expenses);
