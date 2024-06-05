@@ -34,7 +34,9 @@ export const GlobalProvider = ({ children }) => {
      * User Module
      */
     const login = async (user) => {
-        return await axios.post(`${BASE_URL}auth`, user).catch((err) => {
+        return await axios.post(`${BASE_URL}auth`, user, {
+             withCredentials: true // Necessary to receive cookies
+        }).catch((err) => {
             console.error(err.response.data.message)
         })
     }
