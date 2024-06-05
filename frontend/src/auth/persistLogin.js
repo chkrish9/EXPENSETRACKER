@@ -27,13 +27,14 @@ const PersistLogin = () => {
                     if (!response) {
                         return;
                     }
-                    const { accessToken } = response.data;
+                    const accessToken  = response;
                     setToken(accessToken);
                     setTrueSuccess(true)
                 }
                 catch (err) {
                     console.error(err)
                 }
+                return;   
             }
 
             if (!token) verifyRefreshToken();
