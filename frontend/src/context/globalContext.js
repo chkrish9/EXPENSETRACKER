@@ -7,8 +7,7 @@ import axios, { axiosPrivate } from "../utils/axios";
 const GlobalContext = React.createContext()
 
 export const GlobalProvider = ({ children }) => {
-   
-    const [user, setUser] = useState(null);
+
     const [token, setToken] = useState('');
     const navigate = useNavigate();
 
@@ -64,7 +63,6 @@ export const GlobalProvider = ({ children }) => {
         const response = await axiosPrivate.get('auth/refresh', {
             withCredentials: true
         });
-        setUser(localStorage.getItem("username"));
         return response.data.accessToken;
     }
 
@@ -81,7 +79,6 @@ export const GlobalProvider = ({ children }) => {
      * Income Module
      */
     const addIncome = async (income) => {
-        income["user"] = user;
         await axiosPrivate.post(`transactions/add-income`, income)
             .catch((err) => {
                 console.error(err.response.data.message)
@@ -95,7 +92,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const getIncomes = async () => {
-        const response = await axiosPrivate.get(`transactions/get-incomes/${user}`);
+        const response = await axiosPrivate.get(`transactions/get-incomes`);
         const data = await getTransactionsByMonthAndYear(response.data, dashboardDate);
         setAllIncomes(response.data);
         setIncomes(data);
@@ -128,7 +125,6 @@ export const GlobalProvider = ({ children }) => {
      */
 
     const addExpense = async (expense) => {
-        expense["user"] = user;
         await axiosPrivate.post(`transactions/add-expense`, expense)
             .catch((err) => {
                 console.error(err.response.data.message)
@@ -142,7 +138,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const getExpenses = async () => {
-        const response = await axiosPrivate.get(`transactions/get-expenses/${user}`);
+        const response = await axiosPrivate.get(`transactions/get-expenses`);
         const data = await getTransactionsByMonthAndYear(response.data, dashboardDate);
         setAllExpenses(response.data);
         setExpenses(data);
@@ -233,8 +229,6 @@ export const GlobalProvider = ({ children }) => {
 
     return (
         <GlobalContext.Provider value={{
-            user,
-            setUser,
             token,
             setToken,
             login,
