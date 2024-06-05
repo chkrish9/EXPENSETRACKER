@@ -18,7 +18,7 @@ export const Login = () => {
     const navigate = useNavigate();
     const toast = useRef(null);
 
-    const { setUser, login, setToken } = useGlobalContext();
+    const { login, setToken } = useGlobalContext();
 
     const onLogin = async () => {
         if (!loginUser.username || !loginUser.password) {
@@ -28,8 +28,6 @@ export const Login = () => {
         try {
             const response = await login(loginUser);
             setToken(response.data.accessToken);
-            localStorage.setItem("username", loginUser.username)
-            setUser(loginUser.username);
             setLoginUser({
                 username: '',
                 password: ''
