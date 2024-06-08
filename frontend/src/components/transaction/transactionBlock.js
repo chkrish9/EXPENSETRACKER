@@ -26,6 +26,7 @@ import {
   mobile,
   expensedefault,
 } from "../../utils/icons";
+import { numberFormat } from "../../utils/utilites";
 import { Button } from "primereact/button";
 import moment from "moment";
 
@@ -154,7 +155,7 @@ export const TransactionBlock = ({
           </div>
         </div>
         <div className="flex flex-column align-items-center gap-3 py-5">
-          <span className="text-5xl">${transaction.amount}</span>
+          <span className="text-5xl">${numberFormat(transaction.amount)}</span>
           <div className="font-bold">{transaction.title}</div>
           <div className="font-bold">
             <span className="pi pi-calendar"></span>
