@@ -4,7 +4,7 @@ import { DataView } from "primereact/dataview";
 import { Button } from "primereact/button";
 import { TransactionForm } from "../transaction/transactionForm";
 import { TransactionBlock } from "../transaction/transactionBlock";
-import { getCode } from "../../utils/utilites";
+import { getCode, numberFormat } from "../../utils/utilites";
 
 function Income() {
   const {
@@ -83,7 +83,7 @@ function Income() {
   };
   return (
     <>
-      <h1>Total Income:{totalIncome()}</h1>
+      <h1>Total Income:{numberFormat(totalIncome())}</h1>
       <div className="card">
         <DataView value={incomes} listTemplate={listTemplate} />
       </div>
