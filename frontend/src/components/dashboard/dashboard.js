@@ -85,7 +85,7 @@ function Dashboard() {
                             {
                                  !isNaN(totalBalanceInPercentage()) ?  ((typeof totalBalanceInPercentage() === 'number' && totalBalanceInPercentage() >= 0 && totalBalanceInPercentage() <= 100) ?
                                     <Knob value={numberFormat(totalBalanceInPercentage())} size={300} valueTemplate={'{value}%'} readOnly /> :
-                                    <span className={(totalBalanceInPercentage() > 100 ? 'positive':'negative') + " text-8xl my-8"}>{ numberFormat(totalBalanceInPercentage()) + "%" }</span>) : ""
+                                    <span className={(totalBalanceInPercentage() > 100 ? 'positive':'negative') + " text-5xl my-8"}>{ numberFormat(totalBalanceInPercentage()) + "%" }</span>) : ""
                             }
                         </div>
                     </Card>
