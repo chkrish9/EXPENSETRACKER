@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 function Navigation({ active, setActive }) {
     const itemRenderer = (item) => (
         <Link className="p-menuitem-link flex align-items-center gap-2" to={item.link} onClick={() => setActive(item.id)}>
-            <span className="font-bold">{item.icon}</span>
+            <span className="font-bold text-3xl">{item.icon}</span>
         </Link>
     );
     const menuItems = getMenuItems().map((item)=>{
